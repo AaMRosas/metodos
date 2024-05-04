@@ -1,7 +1,6 @@
 streamlit
 numpy
 pandas
-math
 sympy
 fractions
 re

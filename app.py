@@ -8,7 +8,7 @@ from fractions import Fraction
 import re
 import time
 from PIL import Image
-#from io import BytesIO
+from io import BytesIO
 #import matplotlib.pyplot as plt
 x = symbols("x")
 
