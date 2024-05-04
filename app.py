@@ -3,7 +3,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import math
-import sympy
+#import sympy
 from sympy import simplify, symbols, diff, solve, symbols, simplify, Poly, Rational
 from fractions import Fraction
 import re
@@ -485,7 +485,7 @@ if num_method == "Diferencias Divididas":
 
         except Exception as e:
             st.error(f"Ocurrió un error al procesar los datos: {e}")
-            
+            """
 # Interpolación de Lagrange
 if num_method == "Lagrange":
     st.markdown("<h1 style='text-align: center;'>Interpolación de Lagrange</h1>", unsafe_allow_html=True)
@@ -559,3 +559,4 @@ if num_method == "Lagrange":
 
     else:
         st.warning("Por favor, ingrese listas válidas para 'x_i' y 'f_i', asegurándose de que tengan la misma longitud.")
+"""
