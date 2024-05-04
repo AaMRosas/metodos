@@ -10,7 +10,8 @@ import time
 import requests  
 from PIL import Image
 from io import BytesIO
-#import matplotlib.pyplot as plt
+import sympy
+import matplotlib.pyplot as plt
 x = symbols("x")
 
 
@@ -487,7 +488,7 @@ if num_method == "Diferencias Divididas":
 
         except Exception as e:
             st.error(f"Ocurrió un error al procesar los datos: {e}")
-            """
+           
 # Interpolación de Lagrange
 if num_method == "Lagrange":
     st.markdown("<h1 style='text-align: center;'>Interpolación de Lagrange</h1>", unsafe_allow_html=True)
@@ -561,4 +562,3 @@ if num_method == "Lagrange":
 
     else:
         st.warning("Por favor, ingrese listas válidas para 'x_i' y 'f_i', asegurándose de que tengan la misma longitud.")
-"""
