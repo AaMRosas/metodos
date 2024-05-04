@@ -75,15 +75,6 @@ st.markdown(sidebar_style, unsafe_allow_html=True)
 
 # Placeholder para la imagen
 image_placeholder = st.empty()
-"""
-# Cargar y mostrar la imagen
-image_url = "https://raw.githubusercontent.com/AaMRosas/metodos/main/1626144278711.jpg"
-
-# Descargar la imagen desde la URL
-response = requests.get(image_url)
-image = Image.open(BytesIO(response.content))
-"""
-
 # URL de la imagen
 image_url = "https://raw.githubusercontent.com/AaMRosas/metodos/main/1626144278711.jpg"
 
@@ -95,7 +86,7 @@ if response.status_code == 200:
     try:
         # Intentar abrir la imagen
         image = Image.open(BytesIO(response.content))
-        st.image(image, width=300, caption="Mi Imagen")
+        st.image(image, width=300, caption="Ayuda")
     except Exception as e:
         # Manejar errores al abrir la imagen
         st.write("Error al abrir la imagen:", e)
