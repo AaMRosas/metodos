@@ -76,7 +76,7 @@ st.markdown(sidebar_style, unsafe_allow_html=True)
 image_placeholder = st.empty()
 
 # Cargar y mostrar la imagen
-image_path = "C:/Users/123/Desktop/Download/1626144278711.jpg"
+image_path = "C:/Users/123/Desktop/metodos/1626144278711.jpg"
 image = Image.open(image_path)
 
 with image_placeholder.container():
