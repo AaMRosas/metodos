@@ -92,10 +92,10 @@ if response.status_code == 200:
         st.write("Error al abrir la imagen:", e)
 else:
     st.write("Error al descargar la imagen:", response.status_code)
-"""    
+  
 with image_placeholder.container():
     st.image(image, width=300, caption="Why, God, Why??")
-"""
+
 # Simular espera
 time.sleep(2)
 
