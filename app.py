@@ -80,8 +80,8 @@ image_url = "https://raw.githubusercontent.com/AaMRosas/metodos/main/16261442787
 
 # Descargar la imagen y verificar el resultado
 response = requests.get(image_url)
-
-
+image = Image.open(BytesIO(response.content))
+  
 with image_placeholder.container():
     st.image(image, width=300, caption="Why, God, Why??")
 
