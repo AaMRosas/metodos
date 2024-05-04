@@ -3,14 +3,13 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import math
-import sympy
-from sympy import simplify, symbols, diff, solve, symbols, simplify, Poly, Rational
+from sympy import *
 from fractions import Fraction
 import re
 import time
 from PIL import Image
 from io import BytesIO
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 x = symbols("x")
 
 
