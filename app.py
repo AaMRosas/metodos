@@ -3,7 +3,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import math
-#import sympy
+import sympy
 from sympy import simplify, symbols, diff, solve, symbols, simplify, Poly, Rational
 from fractions import Fraction
 import re
