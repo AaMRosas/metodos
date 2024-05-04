@@ -74,14 +74,14 @@ st.markdown(sidebar_style, unsafe_allow_html=True)
 
 # Placeholder para la imagen
 image_placeholder = st.empty()
-
+"""
 # Cargar y mostrar la imagen
 image_path = "C:/Users/123/Desktop/metodos/1626144278711.jpg"
 image = Image.open(image_path)
 
 with image_placeholder.container():
     st.image(image, width=300, caption="Why, God, Why??")
-
+"""
 # Simular espera
 time.sleep(2)
 
