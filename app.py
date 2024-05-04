@@ -81,18 +81,7 @@ image_url = "https://raw.githubusercontent.com/AaMRosas/metodos/main/16261442787
 # Descargar la imagen y verificar el resultado
 response = requests.get(image_url)
 
-# Verificar si la solicitud fue exitosa
-if response.status_code == 200:
-    try:
-        # Intentar abrir la imagen
-        image = Image.open(BytesIO(response.content))
-        st.image(image, width=300, caption="Ayuda")
-    except Exception as e:
-        # Manejar errores al abrir la imagen
-        st.write("Error al abrir la imagen:", e)
-else:
-    st.write("Error al descargar la imagen:", response.status_code)
-  
+
 with image_placeholder.container():
     st.image(image, width=300, caption="Why, God, Why??")
 
