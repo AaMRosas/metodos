@@ -83,7 +83,7 @@ response = requests.get(image_url)
 image = Image.open(BytesIO(response.content))
   
 with image_placeholder.container():
-    st.image(image, width=300, caption="Why, God, Why??")
+    st.image(image, width=300, caption="Ayuda")
 
 # Simular espera
 time.sleep(2)
