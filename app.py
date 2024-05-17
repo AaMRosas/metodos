@@ -13,6 +13,7 @@ from PIL import Image
 from io import BytesIO
 import sympy
 import matplotlib.pyplot as plt
+import cmath
 x = symbols("x")
 
 def ddn(m, z):
@@ -507,3 +508,55 @@ if num_method == "Mínimos Cuadrados":
 
     else:
         st.warning("Ingrese valores válidos para 'x_i' y 'y_i', y asegúrese de que ambas listas tengan la misma longitud.")
+
+if num_method=="Punto Fijo":
+    st.markdown("<h1 style='text-align: center;'>Método del Punto Fijo</h1>", unsafe_allow_html=True)
+
+    # Entrada de datos para el valor inicial y el número máximo de iteraciones
+    x_0 = st.number_input('Ingresa valor inicial (X_0):', format="%.4f")
+    N = st.number_input('Número máximo de iteraciones:', min_value=1, step=1, format="%d")
+    f = st.text_input('Ingrese la función g(x):')
+
+    if st.button('Calcular'):
+        if not f:
+            st.warning("Por favor, ingrese una función válida para g(x).")
+        else:
+            tolerancia = 0.0001
+            er = 100
+            i = 1
+            x = x_0
+
+            st.write('Iteración\tg(f(x))')
+            st.write(f"0\t\t{x:.4f}")
+            resultados = [(0, x)]
+
+            while i <= N and er >= tolerancia:
+                temp = x
+                try:
+                    x = eval(f, {'__builtins__': None}, {'x': temp, 'cmath': cmath, 'math': math, 'np': np})
+                except Exception as e:
+                    st.error(f"Error en la evaluación de la función: {e}")
+                    break
+                er = abs((x - temp))
+                st.write(f"{i}\t\t{x:.4f}")
+                resultados.append((i, x))
+                i += 1
+
+            st.write(f"\nLa solución más aproximada es: {x:.4f}")
+
+            # Mostrar resultados en una tabla
+            st.table(resultados)
+
+            # Gráfica
+            iteraciones, valores = zip(*resultados)
+            fig, ax = plt.subplots()
+            ax.plot(iteraciones, valores, marker='o', linestyle='-', color='b', label='g(f(x))')
+            ax.set_xlabel('Iteraciones')
+            ax.set_ylabel('Valor de g(f(x))')
+            ax.set_title('Convergencia del Método del Punto Fijo')
+            ax.legend()
+
+            # Convertir el gráfico a formato de imagen
+            buf = BytesIO()
+            plt.savefig(buf, format='png')
+            st.image(buf, use_column_width=True)
