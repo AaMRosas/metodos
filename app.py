@@ -117,21 +117,25 @@ with st.sidebar:
 if num_method == "Introduccion":
     st.markdown("<h1 style='text-align: center;'>UNAM</h1>", unsafe_allow_html=True)
     
+    # URLs de las imágenes en formato raw de GitHub
+    image_url1 = "https://raw.githubusercontent.com/AaMRosas/metodos/main/mac.png"
+    image_url2 = "https://raw.githubusercontent.com/AaMRosas/metodos/main/UNAM.png"
+    
     # Definir las columnas con diferentes anchos
     col_uno, col_dos = st.columns([1, 2], gap="small")
     
     # Contenido de la primera columna
     with col_uno:
-        # Agregar una imagen en la primera columna
-        st.image("ruta_a_tu_imagen1.png")
+        # Agregar una imagen en la primera columna desde una URL
+        st.image(image_url1)
         
         # Agregar el texto en la primera columna
-        st.write("**Métodos Numéricos II**\nMatemáticas Aplicadas y Computación")
+        st.write("##Métodos Numéricos II \n ## Matemáticas Aplicadas y Computación")
     
     # Contenido de la segunda columna
     with col_dos:
-        # Agregar una imagen en la segunda columna
-        st.image("ruta_a_tu_imagen2.png")
+        # Agregar una imagen en la segunda columna desde una URL
+        st.image(image_url2)
         
         # Agregar el texto en la segunda columna
         st.info(
@@ -142,6 +146,9 @@ if num_method == "Introduccion":
             "- Alexis Salgado Urtes",
             icon="ℹ️"
         )
+
+
+
 
 
 # False Position
