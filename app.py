@@ -155,96 +155,73 @@ if num_method == "Introduccion":
 
 # Newton-Raphson
 if num_method == "Newton-Raphson":
-        # Título de la aplicación
+    def matrizJacobiano(variables, funciones):
+        return sym.Matrix([[sym.diff(func, var) for var in variables] for func in funciones])
+
+# Definir título centralizado
     st.markdown("<h1 style='text-align: center;'>Newton-Raphson Multivariable</h1>", unsafe_allow_html=True)
 
-    # Entrada de datos de las funciones y punto inicial
+    # Entrada de datos de las ecuaciones y punto inicial
     with st.form(key="my_form"):
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            f1 = st.text_input("Ingrese la primera función:")
-        with col2:
-            f2 = st.text_input("Ingrese la segunda función:")
-        with col3:
-            x0 = st.number_input("Ingrese el valor inicial para x_0:")
-        col4, col5, col6 = st.columns(3)
-        with col4:
-            y0 = st.number_input("Ingrese el valor inicial para y_0:")
-        with col5:
-            tolerancia = st.number_input("Ingrese la tolerancia:", value=0.001)
-        with col6:
-            st.empty()
+        num_ecuaciones = st.number_input("Ingrese el número de ecuaciones:", min_value=1, step=1, value=2)
+        
+        variables = [sym.Symbol(f'x{i}') for i in range(num_ecuaciones)]
+        funciones = [st.text_input(f"Ingrese la función {i+1}:") for i in range(num_ecuaciones)]
+        
+        valores_iniciales = [st.number_input(f"Ingrese el valor inicial para x_{i}:", key=f'x0_{i}') for i in range(num_ecuaciones)]
+        tolerancia = st.number_input("Ingrese la tolerancia:", value=0.001)
+        
         submit_button = st.form_submit_button(label="Calcular")
 
     if submit_button:
         # Convertir las entradas en expresiones simbólicas
-        def matrizJacobiano(variables, funciones):
-            return sym.Matrix([[sym.diff(func, var) for var in variables] for func in funciones])
+        funciones = [sym.sympify(func) for func in funciones]
 
-# Pedir ecuaciones al usuario
-    f1 = st.text_input("Ingrese la primera ecuación:")
-    f2 = st.text_input("Ingrese la segunda ecuación:")
+        # Calcular la matriz Jacobiana
+        Jxy = matrizJacobiano(variables, funciones)
 
-    # Definir variables simbólicas
-    x = sym.Symbol('x')
-    y = sym.Symbol('y')
-    f1 = sym.sympify(f1)
-    f2 = sym.sympify(f2)
+        # Valores iniciales
+        valores_iniciales = {var: valor for var, valor in zip(variables, valores_iniciales)}
 
-    # Definir las funciones y variables
-    funciones = [f1, f2]
-    variables = [x, y]
+        # Inicializar iteraciones y tramo
+        iteraciones = 0
+        tramo = tolerancia * 2
 
-    # Calcular la matriz Jacobiana
-    Jxy = matrizJacobiano(variables, funciones)
+        # Mostrar tabla con las columnas
+        st.write("Tabla de Iteraciones:")
+        st.write("| n | (x1, x2, ..., xn) | Inversa del Jacobiano | Funciones evaluadas en (x1, x2, ..., xn) | Error |")
+        st.write("|---|----------------------|-----------------------|-------------------------------------------|------|")
 
-    # Pedir valores iniciales al usuario
-    x0 = st.number_input("Ingrese el valor inicial de x:")
-    y0 = st.number_input("Ingrese el valor inicial de y:")
-    tolerancia = st.number_input("Ingrese la tolerancia:")
+        while tramo > tolerancia:
+            # Sustituir valores en la matriz Jacobiana
+            J = Jxy.subs(valores_iniciales)
+            Jn = np.array(J, dtype=float)
+            determinante = np.linalg.det(Jn)
 
-    # Valores iniciales
-    xi = x0
-    yi = y0
+            # Calcular las funciones evaluadas en los puntos iniciales
+            funciones_evaluadas = [func.subs(valores_iniciales) for func in funciones]
 
-    # Inicializar iteraciones y tramo
-    iteraciones = 0
-    tramo = tolerancia * 2
+            # Calcular nuevos valores
+            nuevos_valores = {}
+            for var in variables:
+                numerador = sum(func_eval * Jn[i, j] for i, func_eval in enumerate(funciones_evaluadas) for j, var in enumerate(variables) if var == var)
+                nuevos_valores[var] = valores_iniciales[var] - numerador / determinante
 
-    # Mostrar tabla con las columnas
-    st.write("Tabla de Iteraciones:")
-    st.write("| n | (x, y) | Inversa del Jacobiano | Funciones evaluadas en (x, y) | Error |")
-    st.write("|---|--------|-----------------------|-------------------------------|------|")
+            # Calcular el tramo
+            tramo = max(abs(nuevos_valores[var] - valores_iniciales[var]) for var in variables)
 
-    while tramo > tolerancia:
-        # Sustituir valores en la matriz Jacobiana
-        J = Jxy.subs([(x, xi), (y, yi)])
-        Jn = np.array(J, dtype=float)
-        determinante = np.linalg.det(Jn)
+            # Actualizar valores iniciales
+            valores_iniciales.update(nuevos_valores)
 
-        # Calcular las funciones evaluadas en los puntos iniciales
-        f1i = f1.subs([(x, xi), (y, yi)])
-        f2i = f2.subs([(x, xi), (y, yi)])
+            # Incrementar el contador de iteraciones
+            iteraciones += 1
 
-        # Calcular nuevos valores
-        numerador1 = f1i * Jn[1, 1] - f2i * Jn[0, 1]
-        xi1 = xi - numerador1 / determinante
-        numerador2 = f2i * Jn[0, 0] - f1i * Jn[1, 0]
-        yi1 = yi - numerador2 / determinante
+            # Mostrar resultados en la tabla
+            st.write(f"| {iteraciones} | ({', '.join(f'{val:.4f}' for val in valores_iniciales.values())}) | {np.linalg.inv(Jn)} | ({', '.join(f'{val:.4f}' for val in funciones_evaluadas)}) | {tramo:.6f} |")
 
-        # Calcular el tramo
-        tramo = np.max(np.abs([xi1 - xi, yi1 - yi]))
-        xi = round(xi1, 4)
-        yi = round(yi1, 4)
+        # Mostrar el resultado final
+        st.success(f"Resultado final: ({', '.join(f'{val:.4f}' for val in valores_iniciales.values())})")
 
-        # Incrementar el contador de iteraciones
-        iteraciones += 1
-
-        # Mostrar resultados en la tabla
-        st.write(f"| {iteraciones} | ({xi}, {yi}) | {np.linalg.inv(Jn)} | ({f1i}, {f2i}) | {tramo} |")
-
-# Mostrar el resultado final
-    st.success(f"Resultado final: ({xi}, {yi})")
 
 
 
