@@ -729,9 +729,9 @@ if num_method=="Método de Simpson 3/8":
             dh = abs(h - h1) + abs(h - h2)
             
             if dh < tolera:  # tramos iguales
-                sumax = sum(fi[i + j] for j in range(1, 3, 2))
+                sumax = sum(fi[i + j] for j in range(1, n, 2))
                 sum3 = 3 * sumax
-                sumx = sum(fi[i + j] for j in range(1, 3))
+                sumx = sum(fi[i + j] for j in range(4,n-2,3))
                 sum2 = 2 * sumx
 
                 unS38 = fi[i] + sum3 + sum2 + fi[i + 3]
