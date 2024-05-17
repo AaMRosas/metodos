@@ -717,10 +717,6 @@ if num_method=="Método de Simpson 1/3":
 
 if num_method=="Método de Simpson 3/8":
     def integrasimpson38_fi(xi, fi, tolera=0.001):
-        sumax=0
-        sum2=0
-        sum3=0
-        sumx=0
         n = len(xi)
         i = 0
         suma = 0
@@ -744,7 +740,7 @@ if num_method=="Método de Simpson 3/8":
                 iteraciones.append([xi[i], xi[i + 1], xi[i + 2], xi[i + 3], fi[i], fi[i + 1], fi[i + 2], fi[i + 3], unS38])
 
                 i += 3
-                
+
             else:  # tramos desiguales
                 st.error("Los intervalos no son equidistantes")
                 return None, None
