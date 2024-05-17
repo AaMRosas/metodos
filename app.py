@@ -720,6 +720,7 @@ if num_method=="Método de Simpson 3/8":
         n = len(xi)
         i = 0
         suma = 0
+        iteraciones = []
         while i <= (n - 4):
             h = xi[i+1] - xi[i]
             h1 = xi[i+2] - xi[i+1]
@@ -729,15 +730,15 @@ if num_method=="Método de Simpson 3/8":
                 unS38 = fi[i] + 3*fi[i+1] + 3*fi[i+2] + fi[i+3]
                 unS38 = (3/8) * h * unS38
                 suma += unS38
+                iteraciones.append([xi[i], xi[i+1], xi[i+2], xi[i+3], fi[i], fi[i+1], fi[i+2], fi[i+3], unS38])
                 i += 3  # avanzar 3 intervalos
             else:  # tramos desiguales
                 print("\nLos intervalos no son equidistantes")
-                return None
+                return None, None
         if (i+3) < n:  # incompleto, tramos por calcular
             print("\nFaltan puntos")
-            return None
-        return round(suma, 3)
-
+            return None, None
+        return round(suma, 3), iteraciones
 
 # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Método de Simpson 3/8</h1>", unsafe_allow_html=True)
