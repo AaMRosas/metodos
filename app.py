@@ -473,7 +473,7 @@ if num_method == "Mínimos Cuadrados":
 
         # Coeficiente de determinación
         r2 = r ** 2
-        r2_porcentaje = np.around(r2 * 100, 2)
+        r2_porcentaje = np.round(r2 * 100, 4)
 
         # Mostrar resultados
         st.write("Función de regresión lineal: ", f)
