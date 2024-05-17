@@ -123,7 +123,7 @@ if num_method == "Introduccion":
     # Contenido de la primera columna
     with col_uno:
         # Agregar una imagen en la primera columna
-        st.image("ruta_a_tu_imagen1.png", caption="Descripción de la imagen 1")
+        st.image("ruta_a_tu_imagen1.png")
         
         # Agregar el texto en la primera columna
         st.write("**Métodos Numéricos II**\nMatemáticas Aplicadas y Computación")
@@ -131,7 +131,7 @@ if num_method == "Introduccion":
     # Contenido de la segunda columna
     with col_dos:
         # Agregar una imagen en la segunda columna
-        st.image("ruta_a_tu_imagen2.png", caption="Descripción de la imagen 2")
+        st.image("ruta_a_tu_imagen2.png")
         
         # Agregar el texto en la segunda columna
         st.info(
