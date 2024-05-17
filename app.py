@@ -130,12 +130,12 @@ if num_method == "Introduccion":
         st.image(image_url1)
         
         # Agregar el texto en la primera columna
-        st.write("##Métodos Numéricos II \n ## Matemáticas Aplicadas y Computación")
+        st.write("## Métodos Numéricos II \n ## Matemáticas Aplicadas y Computación")
     
     # Contenido de la segunda columna
     with col_dos:
         # Agregar una imagen en la segunda columna desde una URL
-        st.image(image_url2)
+        st.image(image_url2, width=290, caption=None)
         
         # Agregar el texto en la segunda columna
         st.info(
