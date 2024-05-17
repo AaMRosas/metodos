@@ -100,9 +100,7 @@ with st.sidebar:
         "Elija uno de los siguientes métodos numéricos",
         [
             "Introduccion",
-            "False Position",
             "Newton-Raphson",
-            "Secant",
             "Punto Fijo",
             "Lagrange",
             "Diferencias Divididas",
@@ -152,86 +150,6 @@ if num_method == "Introduccion":
 
 
 
-# False Position
-if num_method == "False Position":
-    st.markdown("<h1 style='text-align: center;'>False Position</h1>", unsafe_allow_html=True)
-
-    st.info("A root is considered found when the absolute value of $f(c)$, where $c$ is the midpoint of the interval, is smaller than a predefined tolerance value and this occurs before the maximum number of iterations is reached", icon="ℹ️")
-
-    equation = st.text_input("Input the equation")
-    if equation:
-        function = simplify(equation)
-        st.write(function)
-
-        character = [char for char in equation if char.isalpha()]
-        if len(character) > 0:
-            symbol = symbols(character[0])
-
-    with st.form(key="my_form"):
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            a = st.number_input("Input the first interval")
-        with col2:
-            b = st.number_input("Input the second interval")
-        with col3:
-            e = st.number_input("Input the tolerance", format="%.6f", value=0.000001)
-        with col4:
-            N = st.number_input("Input the maximum number of iterations", value=100)
-
-        submit_button = st.form_submit_button(label="Calculate")
-
-    if submit_button:
-        fa = function.subs(symbol, a)
-        fb = function.subs(symbol, b)
-
-        if fa * fb < 0:
-            n = 1
-            list_a, list_b, list_c, list_fa, list_fb, list_fc, list_abs_fc = ([] for _ in range(7))
-            while True:
-                c = b - ((fb * (b - a)) / (fb - fa))
-                fc = function.subs(symbol, c)
-
-                lists = [list_a, list_b, list_c, list_fa, list_fb, list_fc, list_abs_fc]
-                variables = [a, b, c, fa, fb, fc, math.fabs(fc)]
-                variables = [float(i) for i in variables]
-                
-                for i, j in zip(lists, variables):
-                    i.append(j)
-
-                if math.fabs(fc) <= e:
-                    result = "success"
-                    break
-
-                if n > N:
-                    result = "failed"
-                    break
-
-                if fa * fc < 0:
-                    b = c
-                    fb = fc
-                else:
-                    a = c
-                    fa = fc
-                n += 1
-
-            df = pd.DataFrame({
-                "a": list_a,
-                "b": list_b,
-                "c": list_c,
-                "f(a)": list_fa,
-                "f(b)": list_fb,
-                "f(c)": list_fc,
-                "| f(c) |": list_abs_fc
-            })
-            df.index += 1
-            st.dataframe(df.head(N).style.format({"E": "{:.6f}"}), use_container_width=True)
-
-            if result == "success":
-                st.success(f"This equation has an approximate root of {np.round(float(c), 6)}")
-            else:
-                st.error("The maximum number of iterations has been exceeded")
-        else:
-            st.error("This equation doesn't have any solutions")
 
 # Newton-Raphson
 if num_method == "Newton-Raphson":
@@ -324,90 +242,6 @@ if num_method == "Newton-Raphson":
         else:
             st.error("Division by zero is not allowed")
 
-# Secant
-if num_method == "Secant":
-    st.markdown("<h1 style='text-align: center;'>Secant</h1>", unsafe_allow_html=True)
-
-    st.info("A root is considered found when the absolute value of the difference between $x_{n}$ and $x_{n-1}$ is smaller than a predefined tolerance value and this occurs before the maximum number of iterations is reached", icon="ℹ️")
-
-    equation = st.text_input("Input the equation")
-    if equation:
-        function = simplify(equation)
-        st.write(function)
-
-        character = [char for char in equation if char.isalpha()]
-        if len(character) > 0:
-            symbol = symbols(character[0])
-
-    with st.form(key="my_form"):
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            x0 = st.number_input("Input the first guess")
-        with col2:
-            x1 = st.number_input("Input the second guess")
-        with col3:
-            e = st.number_input("Input the tolerance", format="%.6f", value=0.000001)
-        with col4:
-            N = st.number_input("Input the maximum number of iterations", value=100)
-
-        submit_button = st.form_submit_button(label="Calculate")
-
-    if submit_button:
-        n = 0
-        list_x, list_fx, list_diff = ([] for _ in range(3))
-        while True:
-            fx0 = function.subs(symbol, x0)
-            fx1 = function.subs(symbol, x1)
-            x = x1 - ((fx1 * (x1 - x0)) / (fx1 - fx0))
-            fx = function.subs(symbol, x)
-
-            if math.fabs(fx1 - fx0) == 0:
-                result = "zero"
-                break
-
-            if n == 0:
-                lists = [list_x, list_fx, list_diff]
-                variables = [x0, fx0, np.nan]
-                variables = [float(i) for i in variables]
-
-                for i, j in zip(lists, variables):
-                    i.append(j)
-
-            diff = math.fabs(x - x0)
-
-            lists = [list_x, list_fx, list_diff]
-            variables = [x, fx, diff]
-            variables = [float(i) for i in variables]
-            
-            for i, j in zip(lists, variables):
-                i.append(j)
-            
-            x0 = x1
-            x1 = x
-            n += 1
-
-            if diff <= e:
-                result = "success"
-                break
-
-            if n > N:
-                result = "failed"
-                break
-
-        if result != "zero":
-            df = pd.DataFrame({
-                "xn": list_x,
-                "f(xn)": list_fx,
-                "| xn - xn-1 |": list_diff
-            })
-            st.dataframe(df.head(N).style.format({"E": "{:.6f}"}), use_container_width=True)
-
-        if result == "success":
-            st.success(f"This equation has an approximate root of {np.round(float(x1), 6)}")
-        elif result ==  "failed":
-            st.error("The maximum number of iterations has been exceeded")
-        else:
-            st.error("Division by zero is not allowed")
 
 
 if num_method == "Diferencias Divididas":
