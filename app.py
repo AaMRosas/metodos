@@ -43,7 +43,18 @@ def ddn(m, z):
     matrix_r = np.round(matrix, decimals=4)
     return matrix_r
 
-
+# Función para calcular la matriz Jacobiana
+def matrizJacobiano(variables, funciones):
+    n = len(funciones)
+    m = len(variables)
+    # Inicializar la matriz Jacobiana con ceros
+    Jcb = sym.zeros(n, m)
+    for i in range(n):
+        unafi = sym.sympify(funciones[i])
+        for j in range(m):
+            unavariable = variables[j]
+            Jcb[i, j] = sym.diff(unafi, unavariable)
+    return Jcb
 
 # Configuración básica
 st.set_page_config(
@@ -144,94 +155,83 @@ if num_method == "Introduccion":
 
 # Newton-Raphson
 if num_method == "Newton-Raphson":
-    st.markdown("<h1 style='text-align: center;'>Newton-Raphson</h1>", unsafe_allow_html=True)
+        # Título de la aplicación
+    st.markdown("<h1 style='text-align: center;'>Newton-Raphson Multivariable</h1>", unsafe_allow_html=True)
 
-    st.info("A root is considered found when the absolute value of the difference between $x_{n}$ and $x_{n-1}$ is smaller than a predefined tolerance value and this occurs before the maximum number of iterations is reached", icon="ℹ️")
-
-    equation = st.text_input("Input the equation")
-    if equation:
-        col1, col2 = st.columns(2)
-        with col1:
-            st.write("Initial Equation")
-            function = simplify(equation)
-            st.write(function)
-
-        character = [char for char in equation if char.isalpha()]
-        if len(character) > 0:
-            symbol = symbols(character[0])
-
-        with col2:
-            st.write("Derived Equation")
-            derived_function = diff(function, symbol)
-            st.write(derived_function)
-
+    # Entrada de datos de las funciones y punto inicial
     with st.form(key="my_form"):
         col1, col2, col3 = st.columns(3)
         with col1:
-            x0 = st.number_input("Input the initial guess")
+            f1 = st.text_input("Ingrese la primera función:")
         with col2:
-            e = st.number_input("Input the tolerance", format="%.6f", value=0.000001)
+            f2 = st.text_input("Ingrese la segunda función:")
         with col3:
-            N = st.number_input("Input the maximum number of iterations", value=100)
-
-        submit_button = st.form_submit_button(label="Calculate")
+            x0 = st.number_input("Ingrese el valor inicial para x_0:")
+        col4, col5, col6 = st.columns(3)
+        with col4:
+            y0 = st.number_input("Ingrese el valor inicial para y_0:")
+        with col5:
+            tolerancia = st.number_input("Ingrese la tolerancia:", value=0.0001)
+        with col6:
+            st.empty()
+        submit_button = st.form_submit_button(label="Calcular")
 
     if submit_button:
-        n = 0
-        list_xn, list_fxn, list_f_der_xn, list_diff = ([] for _ in range(4))
-        while True:
-            f = function.subs(symbol, x0)
-            f_derivative = derived_function.subs(symbol, x0)
-            if f_derivative == 0:
-                result = "zero"
-                break
+        # Convertir las entradas en expresiones simbólicas
+        x = sym.Symbol('x')
+        y = sym.Symbol('y')
+        f1 = sym.sympify(f1)
+        f2 = sym.sympify(f2)
 
-            if n == 0:
-                lists = [list_xn, list_fxn, list_f_der_xn, list_diff]
-                variables = [x0, f, f_derivative, np.nan]
-                variables = [float(i) for i in variables]
+        # Definir las funciones y variables
+        funciones = [f1, f2]
+        variables = [x, y]
 
-                for i, j in zip(lists, variables):
-                    i.append(j)
+        # Calcular la matriz Jacobiana
+        Jxy = matrizJacobiano(variables, funciones)
 
-            x1 = x0 - (f / f_derivative)
-            fx1 = function.subs(symbol, x1)
-            f_derivative_x1 = derived_function.subs(symbol, x1)
-            diff = math.fabs(x1 - x0)
+        # Valores iniciales
+        xi = x0
+        yi = y0
 
-            lists = [list_xn, list_fxn, list_f_der_xn, list_diff]
-            variables = [x1, fx1, f_derivative_x1, diff]
-            variables = [float(i) for i in variables]
-            
-            for i, j in zip(lists, variables):
-                i.append(j)
-            
-            x0 = x1
-            n += 1
+        # Inicializar iteraciones y tramo
+        iteraciones = 0
+        tramo = tolerancia * 2
 
-            if diff <= e:
-                result = "success"
-                break
+        while tramo > tolerancia:
+            # Sustituir valores en la matriz Jacobiana
+            J = Jxy.subs([(x, xi), (y, yi)])
+            Jn = np.array(J, dtype=float)
+            determinante = np.linalg.det(Jn)
 
-            if n > N:
-                result = "failed"
-                break
+            # Calcular las funciones evaluadas en los puntos iniciales
+            f1i = f1.subs([(x, xi), (y, yi)])
+            f2i = f2.subs([(x, xi), (y, yi)])
 
-        if result != "zero":
-            df = pd.DataFrame({
-                "xn": list_xn,
-                "f(xn)": list_fxn,
-                "f'(xn)": list_f_der_xn,
-                "| xn - xn-1 |": list_diff
-            })
-            st.dataframe(df.head(N).style.format({"E": "{:.6f}"}), use_container_width=True)
+            # Calcular nuevos valores
+            numerador1 = f1i * Jn[1, 1] - f2i * Jn[0, 1]
+            xi1 = xi - numerador1 / determinante
+            numerador2 = f2i * Jn[0, 0] - f1i * Jn[1, 0]
+            yi1 = yi - numerador2 / determinante
 
-        if result == "success":
-            st.success(f"This equation has an approximate root of {np.round(float(x1), 6)}")
-        elif result ==  "failed":
-            st.error("The maximum number of iterations has been exceeded")
-        else:
-            st.error("Division by zero is not allowed")
+            # Calcular el tramo
+            tramo = np.max(np.abs([xi1 - xi, yi1 - yi]))
+            xi = round(xi1, 4)
+            yi = round(yi1, 4)
+
+            # Incrementar el contador de iteraciones
+            iteraciones += 1
+
+            # Mostrar resultados
+            st.write(f"Iteración: {iteraciones}")
+            st.write("Jacobiano con puntos iniciales:")
+            st.write(J)
+            st.write(f"Determinante: {determinante}")
+            st.write(f"Puntos xi, yi: {xi}, {yi}")
+            st.write(f"Error: {tramo}")
+
+        # Mostrar el resultado final
+        st.success(f"Resultado final: ({xi}, {yi})")
 
 
 
