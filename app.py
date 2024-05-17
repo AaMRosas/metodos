@@ -116,7 +116,7 @@ with st.sidebar:
 
 if num_method == "Introduccion":
     st.markdown("<h1 style='text-align: center;'>UNAM</h1>", unsafe_allow_html=True)
-    
+    st.write("## Matemáticas Aplicadas y Computación")
     # URLs de las imágenes en formato raw de GitHub
     image_url1 = "https://raw.githubusercontent.com/AaMRosas/metodos/main/mac.png"
     image_url2 = "https://raw.githubusercontent.com/AaMRosas/metodos/main/UNAM.png"
@@ -130,7 +130,7 @@ if num_method == "Introduccion":
         st.image(image_url1)
         
         # Agregar el texto en la primera columna
-        st.write("## Métodos Numéricos II \n ## Matemáticas Aplicadas y Computación")
+        st.write("## Métodos Numéricos II ")
     
     # Contenido de la segunda columna
     with col_dos:
