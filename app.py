@@ -717,6 +717,10 @@ if num_method=="Método de Simpson 1/3":
 
 if num_method=="Método de Simpson 3/8":
     def integrasimpson38_fi(xi, fi, tolera=0.001):
+        sumax=0
+        sum2=0
+        sum3=0
+        sumx=0
         n = len(xi)
         i = 0
         suma = 0
