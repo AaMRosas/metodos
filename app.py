@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import math
 from sympy import *
+import sympy as sym
 from fractions import Fraction
 import re
 import time
@@ -13,17 +14,6 @@ from io import BytesIO
 import sympy
 import matplotlib.pyplot as plt
 x = symbols("x")
-
-
-
-
-
-
-
-
-
-
-
 
 def ddn(m, z):
     # Crear matriz para diferencias divididas
@@ -374,10 +364,10 @@ if num_method == "Lagrange":
     st.latex("l_k(x) = \\prod_{j=0, \\; j \\neq k}^{n} \\frac{x - x_j}{x_k - x_j}, \\; \\text{para } k = 0, \\ldots, n.")
 
     # Entrada de datos para los valores de 'x_i' y 'f_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista $x_i$ separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista '  x_i' separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
-    entrada_y = st.text_input("Ingrese los elementos de la lista $f_i$ separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista 'f_i' separados por comas(,):")
     fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     # Verificar que las listas tengan la misma longitud y al menos un elemento
@@ -433,4 +423,82 @@ if num_method == "Lagrange":
         st.image(buf, use_column_width=True)  # Mostrar la imagen en Streamlit
 
     else:
-        st.warning("Por favor, ingrese listas válidas para $x_i$ y $f_i$, asegurándose de que tengan la misma longitud.")
+        st.warning("Por favor, ingrese listas válidas para 'x_i' y 'f_i', asegurándose de que tengan la misma longitud.")
+
+
+
+if num_method == "Mínimos Cuadrados":
+    # Título de la aplicación
+    st.markdown("<h1 style='text-align: center;'>Regresión Lineal</h1>", unsafe_allow_html=True)
+
+    # Entrada de datos para los valores de 'x_i'
+    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
+    xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
+
+    # Entrada de datos para los valores de 'y_i'
+    entrada_y = st.text_input("Ingrese los elementos de la lista 'y_i' separados por comas(,):")
+    yi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
+
+    if len(xi) == len(yi) and len(xi) > 0:
+        # Procedimiento
+        xi = np.array(xi, dtype=float)
+        yi = np.array(yi, dtype=float)
+        n = len(xi)
+
+        # Sumatorias y medias
+        xm = np.mean(xi)
+        ym = np.mean(yi)
+        sx = np.sum(xi)
+        sy = np.sum(yi)
+        sxy = np.sum(xi * yi)
+        sx2 = np.sum(xi ** 2)
+        sy2 = np.sum(yi ** 2)
+
+        # Coeficientes a0 y a1
+        a1 = (n * sxy - sx * sy) / (n * sx2 - sx ** 2)
+        a0 = ym - a1 * xm
+
+        # Polinomio de grado 1
+        x = sym.Symbol('x')
+        f = a0 + a1 * x
+
+        fx = sym.lambdify(x, f)
+        fi = fx(xi)
+
+        # Coeficiente de correlación
+        numerador = n * sxy - sx * sy
+        raiz1 = np.sqrt(n * sx2 - sx ** 2)
+        raiz2 = np.sqrt(n * sy2 - sy ** 2)
+        r = numerador / (raiz1 * raiz2)
+
+        # Coeficiente de determinación
+        r2 = r ** 2
+        r2_porcentaje = np.around(r2 * 100, 2)
+
+        # Mostrar resultados
+        st.write("Función de regresión lineal: ", f)
+        st.write("Coeficiente de correlación (r): ", r)
+        st.write("Coeficiente de determinación (r²): ", r2)
+        st.write(f"{r2_porcentaje}% de los datos están descritos en el modelo lineal")
+
+        # Gráfica
+        fig, ax = plt.subplots()
+        ax.plot(xi, yi, 'o', label='(xi, yi)')
+        ax.plot(xi, fi, color='orange', label=f)
+
+        # Líneas de error
+        for i in range(0, n, 1):
+            y0 = np.min([yi[i], fi[i]])
+            y1 = np.max([yi[i], fi[i]])
+            ax.vlines(xi[i], y0, y1, color='red', linestyle='dotted')
+        ax.legend()
+        ax.set_xlabel('xi')
+        ax.set_title('Mínimos Cuadrados')
+
+        # Convertir el gráfico a formato de imagen
+        buf = BytesIO()
+        plt.savefig(buf, format='png')
+        st.image(buf, use_column_width=True)
+
+    else:
+        st.warning("Ingrese valores válidos para 'x_i' y 'y_i', y asegúrese de que ambas listas tengan la misma longitud.")
