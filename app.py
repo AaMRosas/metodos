@@ -116,7 +116,7 @@ with st.sidebar:
 
 if num_method == "Introduccion":
     st.markdown("<h1 style='text-align: center;'>Universidad Nacional Autónoma de México</h1>", unsafe_allow_html=True)
-    st.write("## Matemáticas Aplicadas y Computación")
+    st.write("\t ## Matemáticas Aplicadas y Computación")
     # URLs de las imágenes en formato raw de GitHub
     image_url1 = "https://raw.githubusercontent.com/AaMRosas/metodos/main/mac.png"
     image_url2 = "https://raw.githubusercontent.com/AaMRosas/metodos/main/UNAM.png"
