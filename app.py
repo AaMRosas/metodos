@@ -716,42 +716,26 @@ if num_method=="Método de Simpson 1/3":
         st.warning("Ingrese al menos 3 valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud.")
 
 if num_method=="Método de Simpson 3/8":
-    def integrasimpson38_fi(xi, fi, tolera=0.001):
+    def integrasimpson38_fi(xi,fi,tolera = 0.001):
         n = len(xi)
         i = 0
         suma = 0
-        iteraciones = []  # Lista para almacenar los datos de las iteraciones
-
-        while i <= (n - 4):
-            h = xi[i + 1] - xi[i]
-            h1 = xi[i + 2] - xi[i + 1]
-            h2 = xi[i + 3] - xi[i + 2]
-            dh = abs(h - h1) + abs(h - h2)
-            
-            if dh < tolera:  # tramos iguales
-                sumax = sum(fi[i + j] for j in range(1, n, 2))
-                sum3 = 3 * sumax
-                sumx = sum(fi[i + j] for j in range(4,n-2,3))
-                sum2 = 2 * sumx
-
-                unS38 = fi[i] + sum3 + sum2 + fi[i + 3]
-                unS38 = (3 / 8) * h * unS38
-
-                suma += unS38
-                iteraciones.append([xi[i], xi[i + 1], xi[i + 2], xi[i + 3], fi[i], fi[i + 1], fi[i + 2], fi[i + 3], unS38])
-
-                i += 3
-
-            else:  # tramos desiguales
-                print("Los intervalos no son equidistantes")
-                return None, None
-
-        if (i + 1) < n:  # incompleto, tramos por calcular
-            print("Faltan puntos")
-            return None, None
-
-        return round(suma, 3), iteraciones
-
+        while not(i>=(n-4)):
+            h  = xi[i+1]-xi[i]
+            h1 = (xi[i+2]-xi[i+1])
+            h2 = (xi[i+3]-xi[i+2])
+            dh = abs(h-h1)+abs(h-h2)
+            if dh<tolera:# tramos iguales
+                unS38 = fi[i]+3*fi[i+1]+3*fi[i+2]+fi[i+3]
+                unS38 = (3/8)*h*unS38
+                suma = suma + unS38
+            else:  # tramos desiguales # tramos desiguales
+                print("\nLos intervalos no son equidistantes")
+                return None
+        if (i+1)<n: # incompleto, tramos por calcular
+            print("\nFaltan puntos")
+            return None
+        return round(suma, 3)
 
 # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Método de Simpson 3/8</h1>", unsafe_allow_html=True)
