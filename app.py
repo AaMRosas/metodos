@@ -135,7 +135,7 @@ if num_method == "Introduccion":
     # Contenido de la segunda columna
     with col_dos:
         # Agregar una imagen en la segunda columna desde una URL
-        st.image(image_url2, width=190, caption=None)
+        st.image(image_url2, width=170, caption=None)
         
         # Agregar el texto en la segunda columna
         st.info(
@@ -143,7 +143,8 @@ if num_method == "Introduccion":
             "- Munive Rosas Arturo Alberto\n"
             "- Erick Mercado Alejandre\n"
             "- Vilchis López Víctor Manuel\n"
-            "- Alexis Salgado Urtes",
+            "- Alexis Salgado Urtes\n"
+            "- Enríquez Sánchez Joshua Antonio",
             icon="ℹ️"
         )
 
