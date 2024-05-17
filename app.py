@@ -114,23 +114,35 @@ with st.sidebar:
     )
     
 
-
 if num_method == "Introduccion":
     st.markdown("<h1 style='text-align: center;'>UNAM</h1>", unsafe_allow_html=True)
     
+    # Definir las columnas con diferentes anchos
     col_uno, col_dos = st.columns([1, 2], gap="small")
     
-    col_uno.write("**Métodos Numéricos II**\nMatemáticas Aplicadas y Computación")
+    # Contenido de la primera columna
+    with col_uno:
+        # Agregar una imagen en la primera columna
+        st.image("ruta_a_tu_imagen1.png", caption="Descripción de la imagen 1")
+        
+        # Agregar el texto en la primera columna
+        st.write("**Métodos Numéricos II**\nMatemáticas Aplicadas y Computación")
     
-    col_dos.info(
-        "### Integrantes:\n"
-        "- Munive Rosas Arturo Alberto\n"
-        "- Erick Mercado Alejandre\n"
-        "- Vilchis López Víctor Manuel\n"
-        "- Alexis Salgado Urtes",
-        icon="ℹ️"
-    )
-   
+    # Contenido de la segunda columna
+    with col_dos:
+        # Agregar una imagen en la segunda columna
+        st.image("ruta_a_tu_imagen2.png", caption="Descripción de la imagen 2")
+        
+        # Agregar el texto en la segunda columna
+        st.info(
+            "### Integrantes:\n"
+            "- Munive Rosas Arturo Alberto\n"
+            "- Erick Mercado Alejandre\n"
+            "- Vilchis López Víctor Manuel\n"
+            "- Alexis Salgado Urtes",
+            icon="ℹ️"
+        )
+
 
 # False Position
 if num_method == "False Position":
