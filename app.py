@@ -457,7 +457,8 @@ if num_method == "Mínimos Cuadrados":
         # Coeficientes a0 y a1
         a1 = (n * sxy - sx * sy) / (n * sx2 - sx ** 2)
         a0 = ym - a1 * xm
-
+        a0 = np.round(a0, 4)
+        a1 = np.round(a1, 4)
         # Polinomio de grado 1
         x = sym.Symbol('x')
         f = a0 + a1 * x
