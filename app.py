@@ -158,7 +158,7 @@ if num_method == "Newton-Raphson":
     def matrizJacobiano(variables, funciones):
         return sym.Matrix([[sym.diff(func, var) for var in variables] for func in funciones])
 
-# Definir título centralizado
+    # Definir título centralizado
     st.markdown("<h1 style='text-align: center;'>Newton-Raphson Multivariable</h1>", unsafe_allow_html=True)
 
     # Entrada de datos de las ecuaciones y punto inicial
@@ -211,7 +211,7 @@ if num_method == "Newton-Raphson":
             tramo = max(abs(nuevos_valores[var] - valores_iniciales[var]) for var in variables)
 
             # Actualizar valores iniciales
-            valores_iniciales.update(nuevos_valores)
+            valores_iniciales = nuevos_valores.copy()
 
             # Incrementar el contador de iteraciones
             iteraciones += 1
@@ -221,8 +221,6 @@ if num_method == "Newton-Raphson":
 
         # Mostrar el resultado final
         st.success(f"Resultado final: ({', '.join(f'{val:.4f}' for val in valores_iniciales.values())})")
-
-
 
 
 if num_method == "Diferencias Divididas":
