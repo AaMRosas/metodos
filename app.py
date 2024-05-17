@@ -158,13 +158,24 @@ if num_method == "Newton-Raphson":
     st.markdown("<h1 style='text-align: center;'>Newton-Raphson Multivariable</h1>", unsafe_allow_html=True)
 
     # Entrada de datos de las funciones y punto inicial
-    f1 = st.text_input("Ingrese la primera función:")
-    f2 = st.text_input("Ingrese la segunda función:")
-    x0 = st.number_input("Ingrese el valor inicial para x_0:")
-    y0 = st.number_input("Ingrese el valor inicial para y_0:")
-    tolerancia = st.number_input("Ingrese la tolerancia:", value=0.0001)
+    with st.form(key="my_form"):
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            f1 = st.text_input("Ingrese la primera función:")
+        with col2:
+            f2 = st.text_input("Ingrese la segunda función:")
+        with col3:
+            x0 = st.number_input("Ingrese el valor inicial para x_0:")
+        col4, col5, col6 = st.columns(3)
+        with col4:
+            y0 = st.number_input("Ingrese el valor inicial para y_0:")
+        with col5:
+            tolerancia = st.number_input("Ingrese la tolerancia:", value=0.0001)
+        with col6:
+            st.empty()
+        submit_button = st.form_submit_button(label="Calcular")
 
-    if st.button("Calcular"):
+    if submit_button:
         # Convertir las entradas en expresiones simbólicas
         x = sym.Symbol('x')
         y = sym.Symbol('y')
