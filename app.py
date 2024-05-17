@@ -429,7 +429,7 @@ if num_method == "Lagrange":
 
 if num_method == "Mínimos Cuadrados":
     # Título de la aplicación
-    st.markdown("<h1 style='text-align: center;'>Regresión Lineal</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>Minimos Cuadrados(Regresión Lineal)</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para los valores de 'x_i'
     entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
