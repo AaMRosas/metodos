@@ -648,7 +648,7 @@ if num_method=="Método del Trapecio":
         st.warning("Ingrese valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud y más de un punto.")
 
 
-if num_method=="Metodos de Simpson 1/3":
+if num_method=="Método de Simpson 1/3":
     def integrasimpson13_fi(xi, fi, tolera=1e-10):
         n = len(xi)
         i = 0
