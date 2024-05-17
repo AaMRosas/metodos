@@ -566,75 +566,83 @@ if num_method=="Método del Trapecio":
         k = 0
         suma = 0
         trapezoids = []  # Lista para almacenar los puntos de los trapezoides
+        iteraciones = []  # Lista para almacenar los datos de las iteraciones
 
         h = (b - a) / n
         if equid(xi):
             for i in range(k, n):
-                suma += (fi[i] + fi[i + 1]) / 2  # Área del trapecio
+                area = (fi[i] + fi[i + 1]) / 2  # Área del trapecio
+                suma += area
                 trapezoids.append([(xi[i], 0), (xi[i], fi[i]), (xi[i + 1], fi[i + 1]), (xi[i + 1], 0)])
+                iteraciones.append([i+1, xi[i], xi[i+1], fi[i], fi[i+1], area])
 
             resultado = h * suma
-            return round(resultado, 3), trapezoids
+            return round(resultado, 3), trapezoids, iteraciones
         else:
             st.error("Valores no equidistantes")
-            return None, None
+            return None, None, None
 
-    # Función para verificar equidistancia
-    def equid(xi):
-        tol = 1e-10  # Tolerancia para verificar equidistancia
-        diff = xi[1] - xi[0]  # Diferencia entre el segundo y primer elemento
+# Función para verificar equidistancia
+def equid(xi):
+    tol = 1e-10  # Tolerancia para verificar equidistancia
+    diff = xi[1] - xi[0]  # Diferencia entre el segundo y primer elemento
 
-        for i in range(1, len(xi) - 1):
-            # Verificar si la diferencia entre los elementos es aproximadamente igual
-            if abs(xi[i + 1] - xi[i] - diff) > tol:
-                return False
-        return True
+    for i in range(1, len(xi) - 1):
+        # Verificar si la diferencia entre los elementos es aproximadamente igual
+        if abs(xi[i + 1] - xi[i] - diff) > tol:
+            return False
+    return True
 
-    # Título de la aplicación
-    st.markdown("<h1 style='text-align: center;'>Método del Trapecio</h1>", unsafe_allow_html=True)
+# Título de la aplicación
+st.markdown("<h1 style='text-align: center;'>Método del Trapecio</h1>", unsafe_allow_html=True)
 
-    # Entrada de datos para los valores de 'x_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
-    xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
+# Entrada de datos para los valores de 'x_i'
+entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
+xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
-    # Entrada de datos para los valores de 'f(x_i)'
-    entrada_y = st.text_input("Ingrese los elementos de la lista 'f(x_i)' separados por comas(,):")
-    fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
+# Entrada de datos para los valores de 'f(x_i)'
+entrada_y = st.text_input("Ingrese los elementos de la lista 'f(x_i)' separados por comas(,):")
+fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
-    if len(xi) == len(fi) and len(xi) > 1:
-        n = len(xi) - 1
-        A = xi[0]
-        B = xi[-1]
+if len(xi) == len(fi) and len(xi) > 1:
+    n = len(xi) - 1
+    A = xi[0]
+    B = xi[-1]
 
-        resultado_integral, trapezoids = Trapecio(A, B, n, fi, xi)
+    resultado_integral, trapezoids, iteraciones = Trapecio(A, B, n, fi, xi)
 
-        if resultado_integral is not None:
-            st.write("El resultado de la integral es:", resultado_integral)
+    if resultado_integral is not None:
+        st.write("El resultado de la integral es:", resultado_integral)
 
-            # Gráfica de la función f(x)
-            x = np.linspace(A, B, 100)
-            y = np.interp(x, xi, fi)  # Interpolación lineal para obtener valores de y en x
+        # Mostrar iteraciones en una tabla
+        iteraciones_df = pd.DataFrame(iteraciones, columns=["Iteración", "x_i", "x_i+1", "f(x_i)", "f(x_i+1)", "Área"])
+        st.table(iteraciones_df)
 
-            fig, ax = plt.subplots()
-            ax.plot(x, y, label='f(x)')
-            ax.scatter(xi, fi, color='red', label='Puntos')
+        # Gráfica de la función f(x)
+        x = np.linspace(A, B, 100)
+        y = np.interp(x, xi, fi)  # Interpolación lineal para obtener valores de y en x
 
-            # Dibujar los trapezoides utilizados para la integración
-            for trap in trapezoids:
-                trap_x = [p[0] for p in trap]
-                trap_y = [p[1] for p in trap]
-                ax.fill(trap_x, trap_y, color='green', alpha=0.3)
+        fig, ax = plt.subplots()
+        ax.plot(x, y, label='f(x)')
+        ax.scatter(xi, fi, color='red', label='Puntos')
 
-            # Etiquetas y leyenda
-            ax.set_xlabel('x')
-            ax.set_ylabel('f(x)')
-            ax.set_title('Método del Trapecio')
-            ax.legend()
+        # Dibujar los trapezoides utilizados para la integración
+        for trap in trapezoids:
+            trap_x = [p[0] for p in trap]
+            trap_y = [p[1] for p in trap]
+            ax.fill(trap_x, trap_y, color='green', alpha=0.3)
 
-            # Convertir el gráfico a formato de imagen
-            buf = BytesIO()
-            plt.savefig(buf, format='png')
-            st.image(buf, use_column_width=True)
+        # Etiquetas y leyenda
+        ax.set_xlabel('x')
+        ax.set_ylabel('f(x)')
+        ax.set_title('Método del Trapecio')
+        ax.legend()
 
-    else:
-        st.warning("Ingrese valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud y más de un punto.")
+        # Convertir el gráfico a formato de imagen
+        buf = BytesIO()
+        plt.savefig(buf, format='png')
+        st.image(buf, use_column_width=True)
+
+else:
+    st.warning("Ingrese valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud y más de un punto.")
+
