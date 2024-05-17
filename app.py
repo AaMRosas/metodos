@@ -99,6 +99,7 @@ with st.sidebar:
     num_method = st.radio(
         "Elija uno de los siguientes métodos numéricos",
         [
+            "Introduccion",
             "False Position",
             "Newton-Raphson",
             "Secant",
@@ -113,6 +114,23 @@ with st.sidebar:
     )
     
 
+
+if num_method == "Introduccion":
+    st.markdown("<h1 style='text-align: center;'>UNAM</h1>", unsafe_allow_html=True)
+    
+    col_uno, col_dos = st.columns([1, 2], gap="small")
+    
+    col_uno.write("**Métodos Numéricos II**\nMatemáticas Aplicadas y Computación")
+    
+    col_dos.info(
+        "### Integrantes:\n"
+        "- Munive Rosas Arturo Alberto\n"
+        "- Erick Mercado Alejandre\n"
+        "- Vilchis López Víctor Manuel\n"
+        "- Alexis Salgado Urtes",
+        icon="ℹ️"
+    )
+   
 
 # False Position
 if num_method == "False Position":
