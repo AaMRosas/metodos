@@ -171,67 +171,80 @@ if num_method == "Newton-Raphson":
         with col4:
             y0 = st.number_input("Ingrese el valor inicial para y_0:")
         with col5:
-            tolerancia = st.number_input("Ingrese la tolerancia:", value=0.0001)
+            tolerancia = st.number_input("Ingrese la tolerancia:", value=0.001)
         with col6:
             st.empty()
         submit_button = st.form_submit_button(label="Calcular")
 
     if submit_button:
         # Convertir las entradas en expresiones simbólicas
-        x = sym.Symbol('x')
-        y = sym.Symbol('y')
-        f1 = sym.sympify(f1)
-        f2 = sym.sympify(f2)
+        def matrizJacobiano(variables, funciones):
+            return sym.Matrix([[sym.diff(func, var) for var in variables] for func in funciones])
 
-        # Definir las funciones y variables
-        funciones = [f1, f2]
-        variables = [x, y]
+# Pedir ecuaciones al usuario
+    f1 = st.text_input("Ingrese la primera ecuación:")
+    f2 = st.text_input("Ingrese la segunda ecuación:")
 
-        # Calcular la matriz Jacobiana
-        Jxy = matrizJacobiano(variables, funciones)
+    # Definir variables simbólicas
+    x = sym.Symbol('x')
+    y = sym.Symbol('y')
+    f1 = sym.sympify(f1)
+    f2 = sym.sympify(f2)
 
-        # Valores iniciales
-        xi = x0
-        yi = y0
+    # Definir las funciones y variables
+    funciones = [f1, f2]
+    variables = [x, y]
 
-        # Inicializar iteraciones y tramo
-        iteraciones = 0
-        tramo = tolerancia * 2
+    # Calcular la matriz Jacobiana
+    Jxy = matrizJacobiano(variables, funciones)
 
-        while tramo > tolerancia:
-            # Sustituir valores en la matriz Jacobiana
-            J = Jxy.subs([(x, xi), (y, yi)])
-            Jn = np.array(J, dtype=float)
-            determinante = np.linalg.det(Jn)
+    # Pedir valores iniciales al usuario
+    x0 = st.number_input("Ingrese el valor inicial de x:")
+    y0 = st.number_input("Ingrese el valor inicial de y:")
+    tolerancia = st.number_input("Ingrese la tolerancia:")
 
-            # Calcular las funciones evaluadas en los puntos iniciales
-            f1i = f1.subs([(x, xi), (y, yi)])
-            f2i = f2.subs([(x, xi), (y, yi)])
+    # Valores iniciales
+    xi = x0
+    yi = y0
 
-            # Calcular nuevos valores
-            numerador1 = f1i * Jn[1, 1] - f2i * Jn[0, 1]
-            xi1 = xi - numerador1 / determinante
-            numerador2 = f2i * Jn[0, 0] - f1i * Jn[1, 0]
-            yi1 = yi - numerador2 / determinante
+    # Inicializar iteraciones y tramo
+    iteraciones = 0
+    tramo = tolerancia * 2
 
-            # Calcular el tramo
-            tramo = np.max(np.abs([xi1 - xi, yi1 - yi]))
-            xi = round(xi1, 4)
-            yi = round(yi1, 4)
+    # Mostrar tabla con las columnas
+    st.write("Tabla de Iteraciones:")
+    st.write("| n | (x, y) | Inversa del Jacobiano | Funciones evaluadas en (x, y) | Error |")
+    st.write("|---|--------|-----------------------|-------------------------------|------|")
 
-            # Incrementar el contador de iteraciones
-            iteraciones += 1
+    while tramo > tolerancia:
+        # Sustituir valores en la matriz Jacobiana
+        J = Jxy.subs([(x, xi), (y, yi)])
+        Jn = np.array(J, dtype=float)
+        determinante = np.linalg.det(Jn)
 
-            # Mostrar resultados
-            st.write(f"Iteración: {iteraciones}")
-            st.write("Jacobiano con puntos iniciales:")
-            st.write(np.array(J).astype(float))
-            st.write(f"Determinante: {determinante}")
-            st.write(f"Puntos xi, yi: {xi}, {yi}")
-            st.write(f"Error: {tramo}")
+        # Calcular las funciones evaluadas en los puntos iniciales
+        f1i = f1.subs([(x, xi), (y, yi)])
+        f2i = f2.subs([(x, xi), (y, yi)])
 
-        # Mostrar el resultado final
-        st.success(f"Resultado final: ({xi}, {yi})")
+        # Calcular nuevos valores
+        numerador1 = f1i * Jn[1, 1] - f2i * Jn[0, 1]
+        xi1 = xi - numerador1 / determinante
+        numerador2 = f2i * Jn[0, 0] - f1i * Jn[1, 0]
+        yi1 = yi - numerador2 / determinante
+
+        # Calcular el tramo
+        tramo = np.max(np.abs([xi1 - xi, yi1 - yi]))
+        xi = round(xi1, 4)
+        yi = round(yi1, 4)
+
+        # Incrementar el contador de iteraciones
+        iteraciones += 1
+
+        # Mostrar resultados en la tabla
+        st.write(f"| {iteraciones} | ({xi}, {yi}) | {np.linalg.inv(Jn)} | ({f1i}, {f2i}) | {tramo} |")
+
+# Mostrar el resultado final
+    st.success(f"Resultado final: ({xi}, {yi})")
 
 
 
