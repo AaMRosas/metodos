@@ -109,7 +109,7 @@ with st.sidebar:
             "Mínimos Cuadrados",
             "Método del Trapecio",
             "Método de Simpson 1/3",
-            "Método de Simpson 3/3"
+            "Método de Simpson 3/8"
         ]
     )
     
@@ -714,3 +714,73 @@ if num_method=="Método de Simpson 1/3":
 
     else:
         st.warning("Ingrese al menos 3 valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud.")
+
+if num_method=="Método de Simpson 3/8":
+    def integrasimpson38_fi(xi, fi, tolera=1e-10):
+        n = len(xi)
+        i = 0
+        suma = 0
+        iteraciones = []  # Lista para almacenar los datos de las iteraciones
+
+        while not (i >= (n - 3)):
+            h = xi[i + 1] - xi[i]
+            h1 = xi[i + 2] - xi[i + 1]
+            h2 = xi[i + 3] - xi[i + 2]
+            dh = abs(h - h1) + abs(h - h2)
+            if dh < tolera:  # tramos iguales
+                unS38 = fi[i] + 3 * fi[i + 1] + 3 * fi[i + 2] + fi[i + 3]
+                unS38 = (3 / 8) * h * unS38
+                suma += unS38
+                iteraciones.append([xi[i], xi[i + 1], xi[i + 2], xi[i + 3], fi[i], fi[i + 1], fi[i + 2], fi[i + 3], unS38])
+                i += 3
+            else:  # tramos desiguales
+                st.error("Los intervalos no son equidistantes")
+                return None, None
+        if (i + 1) < n:  # incompleto, tramos por calcular
+            st.error("Faltan puntos")
+            return None, None
+        return round(suma, 3), iteraciones
+
+# Título de la aplicación
+    st.markdown("<h1 style='text-align: center;'>Método de Simpson 3/8</h1>", unsafe_allow_html=True)
+
+    # Entrada de datos para los valores de 'x_i'
+    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
+    xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
+
+    # Entrada de datos para los valores de 'f(x_i)'
+    entrada_y = st.text_input("Ingrese los elementos de la lista 'f(x_i)' separados por comas(,):")
+    fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
+
+    if len(xi) == len(fi) and len(xi) > 3:
+        resultado_integral, iteraciones = integrasimpson38_fi(xi, fi)
+
+        if resultado_integral is not None:
+            st.write("El resultado de la integral es:", resultado_integral)
+
+            # Mostrar iteraciones en una tabla
+            iteraciones_df = pd.DataFrame(iteraciones, columns=["x_i", "x_i+1", "x_i+2", "x_i+3", "f(x_i)", "f(x_i+1)", "f(x_i+2)", "f(x_i+3)", "Área"])
+            st.table(iteraciones_df)
+
+            # Gráfica de la función f(x)
+            x = np.linspace(min(xi), max(xi), 100)
+            y = np.interp(x, xi, fi)  # Interpolación lineal para obtener valores de y en x
+            plt.plot(x, y, label='f(x)')
+
+            # Graficar los puntos
+            plt.scatter(xi, fi, color='red', label='Puntos')
+
+            # Etiquetas y leyenda
+            plt.xlabel('x')
+            plt.ylabel('f(x)')
+            plt.title('Gráfico de f(x)')
+            plt.legend()
+
+            # Dibujar los tramos utilizados para la integración
+            for i in range(0, len(xi) - 3, 3):
+                plt.plot(xi[i:i + 4], fi[i:i + 4], color='green')
+
+            st.pyplot(plt)
+
+    else:
+        st.warning("Ingrese al menos 4 valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud.")
