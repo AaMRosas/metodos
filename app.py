@@ -225,7 +225,7 @@ if num_method == "Newton-Raphson":
             # Mostrar resultados
             st.write(f"Iteración: {iteraciones}")
             st.write("Jacobiano con puntos iniciales:")
-            st.write(J)
+            st.write(np.array(J).astype(float))
             st.write(f"Determinante: {determinante}")
             st.write(f"Puntos xi, yi: {xi}, {yi}")
             st.write(f"Error: {tramo}")
