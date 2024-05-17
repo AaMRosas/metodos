@@ -720,7 +720,7 @@ if num_method=="Método de Simpson 3/8":
         n = len(xi)
         i = 0
         suma = 0
-        while not(i>=(n-4)):
+        while not(i>=(n-3)):
             h  = xi[i+1]-xi[i]
             h1 = (xi[i+2]-xi[i+1])
             h2 = (xi[i+3]-xi[i+2])
