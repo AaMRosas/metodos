@@ -728,7 +728,11 @@ if num_method=="Método de Simpson 3/8":
             h2 = xi[i + 3] - xi[i + 2]
             dh = abs(h - h1) + abs(h - h2)
             if dh < tolera:  # tramos iguales
-                unS38 = fi[i] + 3 * fi[i + 1] + 3 * fi[i + 2] + fi[i + 3]
+                sumax = lambda n, xi: sum(xi(i) for i in range(1, n, 2))
+                sum3=3*sumax
+                sumx=lambda n,xi: sum(xi(i) for i in range(4,n-2,3))
+                sum2=2*sumx
+                unS38 = fi[i] + sum3+ sum2 + fi[i + 3]
                 unS38 = (3 / 8) * h * unS38
                 suma += unS38
                 iteraciones.append([xi[i], xi[i + 1], xi[i + 2], xi[i + 3], fi[i], fi[i + 1], fi[i + 2], fi[i + 3], unS38])
