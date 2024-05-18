@@ -155,7 +155,8 @@ if num_method == "Introduccion":
 
 # Newton-Raphson
 if num_method == "Newton-Raphson":
-    def matrizJacobiano(variables, funciones):
+
+   def matrizJacobiano(variables, funciones):
         n = len(funciones)
         m = len(variables)
         # matriz Jacobiano inicia con ceros
@@ -239,6 +240,23 @@ if num_method == "Newton-Raphson":
 
         # Mostramos el resultado final
         st.success(f"Resultado final: ({', '.join(f'{val:.4f}' for val in valores_iniciales.values())})")
+
+
+if num_method == "Diferencias Divididas":
+    st.markdown("<h1 style='text-align: center;'>Diferencias Divididas</h1>", unsafe_allow_html=True)
+    # Texto informativo
+    st.info("El método de Newton de las diferencias divididas nos permite calcular los coeficientes $c_j$ de la combinación lineal mediante la construcción de las llamadas diferencias divididas, que vienen definidas de forma recurrente.")
+    
+    # Presentar fórmulas utilizando st.latex
+    st.latex("f[x_i] = f_i")
+    
+    st.latex("f[x_i, x_{i+1}, \ldots, x_{i+j}] = \\frac{f[x_{i+1}, \ldots, x_{i+j}] - f[x_i, x_{i+1}, \ldots, x_{i+j-1}]}{x_{i+j} - x_i}")
+    
+    st.info("Tenemos los siguientes casos particulares:")
+    
+    st.latex("f[x_0, x_1] = \\frac{f[x_1] - f[x_0]}{x_1 - x_0}")
+    
+    st.latex("f[x_0, x_1, x_2] = \\frac{f[x_1, x_2] - f[x_0, x_1]}{x_2 - x_0}")
 
 
     with st.form(key="divided_diff_form"):
