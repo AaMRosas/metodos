@@ -178,7 +178,7 @@ if num_method == "Newton-Raphson":
     x0 = st.number_input("Ingrese el valor inicial para x0:", format="%.4f")
     y0 = st.number_input("Ingrese el valor inicial para y0:", format="%.4f")
 
-    tolera = st.number_input("Ingrese la tolerancia:", value=0.001, format="%.4f")
+    tolera = st.number_input("Ingrese la tolerancia:", value=0.0001, format="%.4f")
 
     if st.button('Calcular'):
         if not f1 or not f2:
