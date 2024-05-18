@@ -156,7 +156,7 @@ if num_method == "Introduccion":
 # Newton-Raphson
 if num_method == "Newton-Raphson":
 
-   def matrizJacobiano(variables, funciones):
+    def matrizJacobiano(variables, funciones):
         n = len(funciones)
         m = len(variables)
         # matriz Jacobiano inicia con ceros
