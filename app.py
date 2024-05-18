@@ -178,7 +178,7 @@ if num_method == "Newton-Raphson":
     x0 = st.number_input("Ingrese el valor inicial para x0:", format="%.4f")
     y0 = st.number_input("Ingrese el valor inicial para y0:", format="%.4f")
 
-    tolera = st.number_input("Ingrese la tolerancia:", value=0.0001, format="%.4f")
+    tolera = st.number_input("Ingrese la tolerancia:", value=0.001, format="%.4f")
 
     if st.button('Calcular'):
         if not f1 or not f2:
@@ -207,13 +207,13 @@ if num_method == "Newton-Raphson":
             tramo = tolera * 2
 
             resultados = []
-
+            st.write("### Iteraciones")
             while tramo > tolera:
                 J = Jxy.subs([(x, xi), (y, yi)])
 
                 # Determinante de J
                 Jn = np.array(J, dtype=float)
-                determinante = np.linalg.det(Jn)
+                determinante = round(np.linalg.det(Jn),4)
 
                 # Iteraciones
                 f1i = f1.subs([(x, xi), (y, yi)])
@@ -245,12 +245,16 @@ if num_method == "Newton-Raphson":
             st.write("### Detalle de las iteraciones")
             iteracion_data = {
                 "Iteración": [res[0] for res in resultados],
+                "Jacobian": [str(res[1]) for res in resultados],
                 "Determinante": [res[2] for res in resultados],
                 "xi": [res[3] for res in resultados],
                 "yi": [res[4] for res in resultados],
                 "Error": [res[5] for res in resultados],
             }
             st.table(iteracion_data)
+
+
+
 
 if num_method == "Diferencias Divididas":
     st.markdown("<h1 style='text-align: center;'>Diferencias Divididas</h1>", unsafe_allow_html=True)
