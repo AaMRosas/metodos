@@ -155,32 +155,32 @@ if num_method == "Introduccion":
 
 # Newton-Raphson
 if num_method == "Newton-Raphson":
-
     def matrizJacobiano(variables, funciones):
-        return sym.Matrix([[sym.diff(func, var) for var in variables] for func in funciones])
+        n = len(funciones)
+        m = len(variables)
+        # matriz Jacobiano inicia con ceros
+        Jcb = sym.zeros(n, m)
+        for i in range(0, n, 1):
+            unafi = sym.sympify(funciones[i])
+            for j in range(0, m, 1):
+                unavariable = variables[j]
+                Jcb[i, j] = sym.diff(unafi, unavariable)
+        return Jcb
 
     # Definir título centralizado
     st.markdown("<h1 style='text-align: center;'>Newton-Raphson Multivariable</h1>", unsafe_allow_html=True)
 
-    # Estado para almacenar las ecuaciones y valores iniciales
-    if 'num_ecuaciones' not in st.session_state:
-        st.session_state.num_ecuaciones = 2
-
     # Entrada de datos de las ecuaciones y punto inicial
     with st.form(key="my_form"):
-        num_ecuaciones = st.number_input("Ingrese el número de ecuaciones:", min_value=1, step=1, value=st.session_state.num_ecuaciones, key="num_ecuaciones_input")
-        
-        # Si cambia el número de ecuaciones, actualiza el estado y reinicia
-        if num_ecuaciones != st.session_state.num_ecuaciones:
-            st.session_state.num_ecuaciones = num_ecuaciones
-            st.experimental_rerun()
+        st.write("Ingrese las ecuaciones:")
+        num_ecuaciones = st.number_input("Número de ecuaciones:", min_value=1, step=1, value=2)
+        variables = [sym.Symbol(f'x{i}') for i in range(num_ecuaciones)]
+        funciones = [st.text_input(f"Ecuación {i+1}:", key=f'func_{i}') for i in range(num_ecuaciones)]
 
-        # Crear variables y entradas para las ecuaciones
-        variables = [sym.Symbol(f'x{i}') for i in range(st.session_state.num_ecuaciones)]
-        funciones = [st.text_input(f"Ingrese la función {i+1}:", key=f'func_{i}') for i in range(st.session_state.num_ecuaciones)]
-        valores_iniciales = [st.number_input(f"Ingrese el valor inicial para x_{i}:", key=f'x0_{i}') for i in range(st.session_state.num_ecuaciones)]
+        x0 = st.number_input("Valor inicial para x:", value=1.5)
+        y0 = st.number_input("Valor inicial para y:", value=3.5)
 
-        tolerancia = st.number_input("Ingrese la tolerancia:", value=0.001)
+        tolerancia = st.number_input("Tolerancia:", value=0.0001)
 
         submit_button = st.form_submit_button(label="Calcular")
 
@@ -188,66 +188,57 @@ if num_method == "Newton-Raphson":
         # Convertir las entradas en expresiones simbólicas
         funciones = [sym.sympify(func) for func in funciones]
 
-        # Calcular la matriz Jacobiana
+        # Ajustar las variables y funciones si hay menos de 3 ecuaciones
+        if num_ecuaciones < 2:
+            variables.extend([sym.Symbol(f'x{i}') for i in range(num_ecuaciones, 2)])
+            funciones.extend(['0'] * (2 - num_ecuaciones))
+
+        # Calcular el Jacobiano
         Jxy = matrizJacobiano(variables, funciones)
 
         # Valores iniciales
-        valores_iniciales = {var: valor for var, valor in zip(variables, valores_iniciales)}
+        valores_iniciales = {variables[0]: x0, variables[1]: y0}
 
         # Inicializar iteraciones y tramo
         iteraciones = 0
         tramo = tolerancia * 2
 
-        # Mostrar tabla con las columnas
-        st.write("Tabla de Iteraciones:")
-        st.write("| n | (x1, x2, ..., xn) | Inversa del Jacobiano | Funciones evaluadas en (x1, x2, ..., xn) | Error |")
-        st.write("|---|----------------------|-----------------------|-------------------------------------------|------|")
+        # Mostrar tabla con los resultados
+        st.write("Tabla de Resultados:")
+        st.write("| Iteración | Jacobiano | Determinante | (x, y) | Error |")
+        st.write("|-----------|-----------|--------------|--------|-------|")
 
         while tramo > tolerancia:
-            # Sustituir valores en la matriz Jacobiana
+            # Sustituir valores en el Jacobiano
             J = Jxy.subs(valores_iniciales)
+
+            # Calculamos el determinante de J
             Jn = np.array(J, dtype=float)
             determinante = np.linalg.det(Jn)
 
-            # Calcular las funciones evaluadas en los puntos iniciales
+            # Calculamos las funciones evaluadas en los puntos iniciales
             funciones_evaluadas = [func.subs(valores_iniciales) for func in funciones]
 
-            # Calcular nuevos valores
+            # Calculamos los nuevos valores
             nuevos_valores = {}
             for i, var in enumerate(variables):
                 numerador = sum(func_eval * Jn[i, j] for j, func_eval in enumerate(funciones_evaluadas))
                 nuevos_valores[var] = valores_iniciales[var] - numerador / determinante
 
-            # Calcular el tramo
+            # Calculamos el tramo
             tramo = max(abs(nuevos_valores[var] - valores_iniciales[var]) for var in variables)
 
-            # Actualizar valores iniciales
+            # Actualizamos valores iniciales
             valores_iniciales = nuevos_valores.copy()
 
-            # Incrementar el contador de iteraciones
+            # Incrementamos el contador de iteraciones
             iteraciones += 1
 
-            # Mostrar resultados en la tabla
-            st.write(f"| {iteraciones} | ({', '.join(f'{val:.4f}' for val in valores_iniciales.values())}) | {np.linalg.inv(Jn)} | ({', '.join(f'{val:.4f}' for val in funciones_evaluadas)}) | {tramo:.6f} |")
+            # Mostramos los resultados en la tabla
+            st.write(f"| {iteraciones} | {J} | {determinante:.4f} | ({', '.join(f'{val:.4f}' for val in valores_iniciales.values())}) | {tramo:.6f} |")
 
-        # Mostrar el resultado final
+        # Mostramos el resultado final
         st.success(f"Resultado final: ({', '.join(f'{val:.4f}' for val in valores_iniciales.values())})")
-
-if num_method == "Diferencias Divididas":
-    st.markdown("<h1 style='text-align: center;'>Diferencias Divididas</h1>", unsafe_allow_html=True)
-    # Texto informativo
-    st.info("El método de Newton de las diferencias divididas nos permite calcular los coeficientes $c_j$ de la combinación lineal mediante la construcción de las llamadas diferencias divididas, que vienen definidas de forma recurrente.")
-    
-    # Presentar fórmulas utilizando st.latex
-    st.latex("f[x_i] = f_i")
-    
-    st.latex("f[x_i, x_{i+1}, \ldots, x_{i+j}] = \\frac{f[x_{i+1}, \ldots, x_{i+j}] - f[x_i, x_{i+1}, \ldots, x_{i+j-1}]}{x_{i+j} - x_i}")
-    
-    st.info("Tenemos los siguientes casos particulares:")
-    
-    st.latex("f[x_0, x_1] = \\frac{f[x_1] - f[x_0]}{x_1 - x_0}")
-    
-    st.latex("f[x_0, x_1, x_2] = \\frac{f[x_1, x_2] - f[x_0, x_1]}{x_2 - x_0}")
 
 
     with st.form(key="divided_diff_form"):
