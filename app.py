@@ -159,26 +159,31 @@ if num_method == "Newton-Raphson":
     def matrizJacobiano(variables, funciones):
         return sym.Matrix([[sym.diff(func, var) for var in variables] for func in funciones])
 
-# Definir título centralizado
+    # Definir título centralizado
     st.markdown("<h1 style='text-align: center;'>Newton-Raphson Multivariable</h1>", unsafe_allow_html=True)
+
+    # Estado para almacenar las ecuaciones y valores iniciales
+    if 'num_ecuaciones' not in st.session_state:
+        st.session_state.num_ecuaciones = 2
 
     # Entrada de datos de las ecuaciones y punto inicial
     with st.form(key="my_form"):
-        num_ecuaciones = st.number_input("Ingrese el número de ecuaciones:", min_value=1, step=1, value=2, key="num_ecuaciones")
+        num_ecuaciones = st.number_input("Ingrese el número de ecuaciones:", min_value=1, step=1, value=st.session_state.num_ecuaciones, key="num_ecuaciones_input")
+        
+        # Si cambia el número de ecuaciones, actualiza el estado y reinicia
+        if num_ecuaciones != st.session_state.num_ecuaciones:
+            st.session_state.num_ecuaciones = num_ecuaciones
+            st.experimental_rerun()
 
         # Crear variables y entradas para las ecuaciones
-        variables = [sym.Symbol(f'x{i}') for i in range(num_ecuaciones)]
-        funciones = [st.text_input(f"Ingrese la función {i+1}:", key=f'func_{i}') for i in range(num_ecuaciones)]
-        valores_iniciales = [st.number_input(f"Ingrese el valor inicial para x_{i}:", key=f'x0_{i}') for i in range(num_ecuaciones)]
+        variables = [sym.Symbol(f'x{i}') for i in range(st.session_state.num_ecuaciones)]
+        funciones = [st.text_input(f"Ingrese la función {i+1}:", key=f'func_{i}') for i in range(st.session_state.num_ecuaciones)]
+        valores_iniciales = [st.number_input(f"Ingrese el valor inicial para x_{i}:", key=f'x0_{i}') for i in range(st.session_state.num_ecuaciones)]
 
         tolerancia = st.number_input("Ingrese la tolerancia:", value=0.001)
 
         submit_button = st.form_submit_button(label="Calcular")
 
-        if submit_button:
-            st.experimental_rerun()
-
-    # Procesamiento después de enviar el formulario
     if submit_button:
         # Convertir las entradas en expresiones simbólicas
         funciones = [sym.sympify(func) for func in funciones]
@@ -227,8 +232,6 @@ if num_method == "Newton-Raphson":
 
         # Mostrar el resultado final
         st.success(f"Resultado final: ({', '.join(f'{val:.4f}' for val in valores_iniciales.values())})")
-
-        
 
 if num_method == "Diferencias Divididas":
     st.markdown("<h1 style='text-align: center;'>Diferencias Divididas</h1>", unsafe_allow_html=True)
