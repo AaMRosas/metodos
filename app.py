@@ -172,8 +172,8 @@ if num_method == "Newton-Raphson":
     st.markdown("<h1 style='text-align: center;'>Método de Newton-Raphson para Sistemas No Lineales</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para las funciones y valores iniciales
-    f1 = st.text_input("Ingrese la primera función f1(x, y):")
-    f2 = st.text_input("Ingrese la segunda función f2(x, y):")
+    f1 = st.text_input("Ingrese la 1ra ecuacion despejada f1(x,y):")
+    f2 = st.text_input("Ingrese la 2da ecuacion despejada f2(x,y):")
 
     x0 = st.number_input("Ingrese el valor inicial para x0:", format="%.4f")
     y0 = st.number_input("Ingrese el valor inicial para y0:", format="%.4f")
@@ -411,7 +411,7 @@ if num_method == "Lagrange":
                     numerador *= x - xi[j]
                     denominador *= xi[i] - xi[j]
             terminoLi = numerador / denominador
-            polinomio += terminoLi * fi[i]
+            polinomio += round(terminoLi,4) * fi[i]
             divisorL[i] = denominador
 
         # Simplificar el polinomio
@@ -641,7 +641,7 @@ if num_method=="Método de Simpson 1/3":
         if i < (n - 1):  # incompleto, faltan tramos por calcular
             st.error("Faltan puntos")
             return None, None
-        return round(suma, 3), iteraciones
+        return round(suma, 4), iteraciones
 
 # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Método de Simpson 1/3</h1>", unsafe_allow_html=True)
@@ -710,7 +710,7 @@ if num_method=="Método de Simpson 3/8":
         if (i+3) < n:  # incompleto, tramos por calcular
             print("\nFaltan puntos")
             return None, None
-        return round(suma, 3), iteraciones
+        return round(suma, 4), iteraciones
 
 # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Método de Simpson 3/8</h1>", unsafe_allow_html=True)
@@ -755,6 +755,7 @@ if num_method=="Método de Simpson 3/8":
 
     else:
         st.warning("Ingrese al menos 4 valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud.")
+
 
 if num_method == "Punto Fijo":
 
