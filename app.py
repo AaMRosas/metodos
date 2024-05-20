@@ -225,6 +225,7 @@ if num_method == "Newton-Raphson":
                 yi1 = yi - numerador2 / determinante
 
                 tramo = np.max(np.abs([xi1 - xi, yi1 - yi]))
+                tramo=round(tramo,4)
                 xi = round(xi1, 4)  # Redondear a 4 decimales
                 yi = round(yi1, 4)  # Redondear a 4 decimales
 
