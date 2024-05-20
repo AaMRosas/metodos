@@ -209,11 +209,11 @@ if num_method == "Newton-Raphson":
             resultados = []
             st.write("### Iteraciones")
             while tramo > tolera:
-                J = Jxy.subs([(round(x,4), round(xi,4)), (round(y,4), round(yi,4))])
+                J = Jxy.subs([(x, xi), (y, yi)])
                 
 
                 # Determinante de J
-                Jn = np.array(J, dtype=float)
+                Jn = np.array(round(J,4), dtype=float)
                 determinante = round(np.linalg.det(Jn),4)
 
                 # Iteraciones
