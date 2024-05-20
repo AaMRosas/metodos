@@ -804,3 +804,67 @@ if num_method=="Método de Simpson 3/8":
 
     else:
         st.warning("Ingrese al menos 4 valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud.")
+
+if num_method == "Introduccion":
+
+    # Funciones de iteración
+    def g1(x, y):
+        return (x**2 + y**2 + 8) / 10
+
+    def g2(x, y):
+        return (x*y**2 + x + 8) / 10
+
+    # Método de Jacobi
+    def jacobi_method(x0, y0, tol, nmaxiter):
+        error = 100
+        niter = 0
+        results = []
+        results.append((niter, x0, y0, error))
+
+        while error > tol and niter < nmaxiter:
+            x1 = g1(y0, x0)
+            y1 = g2(x0, y0)
+            niter += 1
+            error = max(abs(x1 - x0), abs(y1 - y0))
+            results.append((niter, x1, y1, error))
+            x0 = x1
+            y0 = y1
+        return results
+
+    # Método de Gauss-Seidel
+    def gauss_seidel_method(x0, y0, tol, nmaxiter):
+        error = 100
+        niter = 0
+        results = []
+        results.append((niter, x0, y0, error))
+
+        while error > tol and niter < nmaxiter:
+            x1 = g1(x0, y0)
+            y1 = g2(x1, y0)
+            niter += 1
+            error = max(abs(x1 - x0), abs(y1 - y0))
+            results.append((niter, x1, y1, error))
+            x0 = x1
+            y0 = y1
+        return results
+
+    # Aplicación Streamlit
+    st.title("Métodos de Iteración: Jacobi y Gauss-Seidel")
+
+    x0 = st.number_input("Ingrese el valor inicial para x:", value=0.0, format="%.5f")
+    y0 = st.number_input("Ingrese el valor inicial para y:", value=0.0, format="%.5f")
+    tol = st.number_input("Ingrese la tolerancia:", value=0.00001, format="%.5f")
+    nmaxiter = st.number_input("Ingrese el número máximo de iteraciones:", value=100, step=1)
+
+    if st.button("Calcular"):
+        st.subheader("Resultados del Método de Jacobi")
+        jacobi_results = jacobi_method(x0, y0, tol, nmaxiter)
+        jacobi_df = pd.DataFrame(jacobi_results, columns=["Iteración", "x", "y", "Error"])
+        st.dataframe(jacobi_df.style.format({"x": "{:.5f}", "y": "{:.5f}", "Error": "{:.5f}"}))
+
+        st.subheader("Resultados del Método de Gauss-Seidel")
+        gauss_seidel_results = gauss_seidel_method(x0, y0, tol, nmaxiter)
+        gauss_seidel_df = pd.DataFrame(gauss_seidel_results, columns=["Iteración", "x", "y", "Error"])
+        st.dataframe(gauss_seidel_df.style.format({"x": "{:.5f}", "y": "{:.5f}", "Error": "{:.5f}"}))
+
+            
