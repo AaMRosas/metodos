@@ -241,7 +241,7 @@ if num_method == "Newton-Raphson":
                 st.write(f"Error: {tramo}")
 
             st.write("### Resultado final")
-            st.write(f"x: {xi}, y: {yi}")
+            st.write(f"$x$: {xi}, $y$: {yi}")
 
             # Mostrar resultados en una tabla
             st.write("### Detalle de las iteraciones")
@@ -249,8 +249,8 @@ if num_method == "Newton-Raphson":
                 "Iteración": [res[0] for res in resultados],
                 "Jacobian": [str(res[1]) for res in resultados],
                 "Determinante": [res[2] for res in resultados],
-                "xi": [res[3] for res in resultados],
-                "yi": [res[4] for res in resultados],
+                "$x_i$": [res[3] for res in resultados],
+                "$y_i$": [res[4] for res in resultados],
                 "Error": [res[5] for res in resultados],
             }
             st.table(iteracion_data)
@@ -489,8 +489,8 @@ if num_method == "Mínimos Cuadrados":
 
         # Mostrar resultados
         st.write("Función de regresión lineal: ", f)
-        st.write("Coeficiente de correlación (r): ", r)
-        st.write("Coeficiente de determinación (r²): ", r2)
+        st.write("Coeficiente de correlación $r$: ", r)
+        st.write("Coeficiente de determinación $r²$: ", r2)
         st.write(f"{r2_porcentaje}% de los datos están descritos en el modelo lineal")
 
         # Gráfica
@@ -571,7 +571,7 @@ if num_method=="Método del Trapecio":
             st.write("El resultado de la integral es:", resultado_integral)
 
             # Mostrar iteraciones en una tabla
-            iteraciones_df = pd.DataFrame(iteraciones, columns=["Iteración", "x_i", "x_i+1", "f(x_i)", "f(x_i+1)", "Área"])
+            iteraciones_df = pd.DataFrame(iteraciones, columns=["Iteración", "$x_i$", "$x_{i+1}$", "$f(x_i)$", "$f(x_{i+1})$", "Área"])
             st.table(iteraciones_df)
 
             # Gráfica de la función f(x)
@@ -644,7 +644,7 @@ if num_method=="Método de Simpson 1/3":
             st.write("El resultado de la integral es:", resultado_integral)
 
             # Mostrar iteraciones en una tabla
-            iteraciones_df = pd.DataFrame(iteraciones, columns=["x_i", "x_i+1", "x_i+2", "f(x_i)", "f(x_i+1)", "f(x_i+2)", "Área"])
+            iteraciones_df = pd.DataFrame(iteraciones, columns=["$x_i$", "$x_{i+1}$", "$x_{i+2}$", "$f(x_i)$", "$f(x_{i+1})$", "$f(x_{i+2})$", "Área"])
             st.table(iteraciones_df)
 
             # Gráfica de la función f(x)
@@ -713,7 +713,7 @@ if num_method=="Método de Simpson 3/8":
             st.write("El resultado de la integral es:", resultado_integral)
 
             # Mostrar iteraciones en una tabla
-            iteraciones_df = pd.DataFrame(iteraciones, columns=["x_i", "x_i+1", "x_i+2", "x_i+3", "f(x_i)", "f(x_i+1)", "f(x_i+2)", "f(x_i+3)", "Área"])
+            iteraciones_df = pd.DataFrame(iteraciones, columns=["$x_i$", "$x_{i+1}$", "$x_{i+2}$", "$x_{i+3}$", "$f(x_i)$", "$f(x_{i+1})$", "$f(x_{i+2})$", "$f(x_{i+3})$", "Área"])
             st.table(iteraciones_df)
 
             # Gráfica de la función f(x)
@@ -810,12 +810,12 @@ if num_method == "Punto Fijo":
     if st.button("Calcular"):
         st.subheader("Resultados del Método de Jacobi")
         jacobi_results = jacobi_method(x0, y0, tol, nmaxiter)
-        jacobi_df = pd.DataFrame(jacobi_results, columns=["Iteración", "x", "y", "Error"])
+        jacobi_df = pd.DataFrame(jacobi_results, columns=["Iteración", "$x$", "$y$", "Error"])
         st.dataframe(jacobi_df.style.format({"x": "{:.4f}", "y": "{:.4f}", "Error": "{:.4f}"}))
 
         st.subheader("Resultados del Método de Gauss-Seidel")
         gauss_seidel_results = gauss_seidel_method(x0, y0, tol, nmaxiter)
-        gauss_seidel_df = pd.DataFrame(gauss_seidel_results, columns=["Iteración", "x", "y", "Error"])
+        gauss_seidel_df = pd.DataFrame(gauss_seidel_results, columns=["Iteración", "$x$", "$y$", "Error"])
         st.dataframe(gauss_seidel_df.style.format({"x": "{:.4f}", "y": "{:.4f}", "Error": "{:.4f}"}))
 
 
