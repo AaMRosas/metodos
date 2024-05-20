@@ -336,30 +336,23 @@ if num_method == "Diferencias Divididas":
                     p += a[0][i] * terminos
                 pol = simplify(p)                
                 
-                # Obtener los coeficientes del polinomio
-                coefficients = pol.as_poly().all_coeffs()
-                # Convertir los coeficientes a fracciones
-                coefficients_as_fractions = [Rational(coef).limit_denominator() for coef in coefficients]
-                # Reconstruir el polinomio a partir de los coeficientes fraccionarios
-                polynomial_terms = [f"{coef}*x**{i}" for i, coef in enumerate(coefficients_as_fractions[::-1])]
-                # Imprimir el polinomio con los términos separados
+                # Redondear los coeficientes del polinomio a 4 decimales
+                coefficients = [round(float(coef), 4) for coef in pol.as_poly().all_coeffs()]
+                # Reconstruir el polinomio con los coeficientes redondeados
+                polynomial_terms = [f"{coef}*x**{i}" if i != 0 else f"{coef}" for i, coef in enumerate(coefficients[::-1])]
                 polynomial_expression = " + ".join(polynomial_terms)   
-                sexo = simplify(polynomial_expression)
-                st.markdown(f"**Polinomio de Diferencias Divididas:** {pol}")
-                st.write(f"{sexo}") 
-                sexo = str(sexo)
-                # Tu ecuación dinámica (como cadena de texto)
-                # Convertimos "**" a "^" para potencias
-                latex_expression = sexo.replace("**", "^")
+                pol_redondeado = simplify(polynomial_expression)
                 
-                # Eliminamos el símbolo "*" ya que en LaTex, la multiplicación es implícita
+                st.markdown(f"**Polinomio de Diferencias Divididas:** {pol_redondeado}") 
+                
+                # Convertir la expresión del polinomio a LaTeX
+                latex_expression = str(pol_redondeado).replace("**", "^")
+                # Eliminar "*" en las multiplicaciones para LaTeX
                 latex_expression = latex_expression.replace("*", "")
+                # Corregir fracciones en LaTeX
+                latex_expression = re.sub(r"(\d+)/(\d+)", r"\\frac{\1}{\2}", latex_expression)
+                latex_expression = re.sub(r"\b(\w+)\^(\d+/\d+)\b", lambda m: f"{m.group(1)}^{{{m.group(2).replace('/', '')}}}", latex_expression)
                 
-                # Usamos una expresión regular para transformar divisiones en formato LaTex
-                # Esto convierte x/y a \frac{x}{y}
-                latex_expression = re.sub(r"(\d+|\w)/(\d+)", r"\\frac{\1}{\2}", latex_expression)
-                
-                # Renderizamos en LaTex con Streamlit
                 st.latex(latex_expression)
 
         except Exception as e:
