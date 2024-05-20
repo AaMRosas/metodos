@@ -568,11 +568,36 @@ if num_method=="Método del Trapecio":
         resultado_integral, trapezoids, iteraciones = Trapecio(A, B, n, fi, xi)
 
     if resultado_integral is not None:
-            st.write("El resultado de la integral es:", resultado_integral)
+        st.write("El resultado de la integral es:", resultado_integral)
 
-            # Mostrar iteraciones en una tabla
-            iteraciones_df = pd.DataFrame(iteraciones, columns=["Iteración", "$x_i$", "$x_{i+1}$", "$f(x_i)$", "$f(x_{i+1})$", "Área"])
-            st.table(iteraciones_df)
+    # Mostrar iteraciones en una tabla
+    iteraciones_df = pd.DataFrame(iteraciones, columns=["Iteración", "$x_i$", "$x_{i+1}$", "$f(x_i)$", "$f(x_{i+1})$", "Área"])
+
+    # Función para convertir DataFrame a formato LaTeX
+    def dataframe_to_latex(df):
+        latex_table = df.to_latex(index=False, escape=False)
+        return latex_table
+
+    latex_table = dataframe_to_latex(iteraciones_df)
+
+    # Añadir delimitadores de tabla LaTeX y ajustes
+    latex_table = latex_table.replace("\\toprule", "\\hline").replace("\\midrule", "\\hline").replace("\\bottomrule", "\\hline")
+
+    # Reemplazar los saltos de línea para que funcionen en LaTeX en Streamlit
+    latex_table = latex_table.replace("\n", " ")
+
+    # Añadir formato tabular y delimitadores de tabla en LaTeX
+    latex_table = r"""
+    \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    """ + latex_table.split("\\hline", 1)[1] + r"""
+    \hline
+    \end{tabular}
+    """
+
+    st.write("### Tabla de Iteraciones")
+    st.latex(latex_table)
+
 
             # Gráfica de la función f(x)
     x = np.linspace(A, B, 100)
@@ -589,18 +614,18 @@ if num_method=="Método del Trapecio":
         ax.fill(trap_x, trap_y, color='green', alpha=0.3)
 
             # Etiquetas y leyenda
-    ax.set_xlabel('x')
-    ax.set_ylabel('f(x)')
-    ax.set_title('Método del Trapecio')
-    ax.legend()
+        ax.set_xlabel('x')
+        ax.set_ylabel('f(x)')
+        ax.set_title('Método del Trapecio')
+        ax.legend()
 
             # Convertir el gráfico a formato de imagen
-    buf = BytesIO()
-    plt.savefig(buf, format='png')
-    st.image(buf, use_column_width=True)
+        buf = BytesIO()
+        plt.savefig(buf, format='png')
+        st.image(buf, use_column_width=True)
 
-else:
-    st.warning("Ingrese valores válidos para $x_i$ y $f(x_i)$, y asegúrese de que ambas listas tengan la misma longitud y más de un punto.")
+    else:
+        st.warning("Ingrese valores válidos para $x_i$ y $f(x_i)$, y asegúrese de que ambas listas tengan la misma longitud y más de un punto.")
 
 
 if num_method=="Método de Simpson 1/3":
