@@ -798,7 +798,13 @@ if num_method == "Punto Fijo":
         return results
 
     # Aplicación Streamlit
-    st.title("Métodos de Iteración: Jacobi y Gauss-Seidel")
+    st.title("Punto fijo")
+    st.info("Suponemos que se quiere buscar una solucíon del sistema:")
+    st.latex("x^2-10x+y^2+8=0,\\ xy^2+x-10y+8=0.")
+    st.info("Se eligen")
+    st.latex("x=\frac{1}{10}(x^2 +y^2 +8 ),")
+    st.latex("y=\frac{1}{10}(xy^2 +x +8 ),")
+    st.info("se partira de los valores que de para $(x,y)$ y, utilizando el método del punto fijo")
 
     x0 = st.number_input("Ingrese el valor inicial para x:", value=0.0, format="%.5f")
     y0 = st.number_input("Ingrese el valor inicial para y:", value=0.0, format="%.5f")
