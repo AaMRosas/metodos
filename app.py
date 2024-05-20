@@ -213,7 +213,7 @@ if num_method == "Newton-Raphson":
                 
 
                 # Determinante de J
-                Jn = np.array(round(J,4), dtype=float)
+                Jn = np.array(J, dtype=float)
                 determinante = round(np.linalg.det(Jn),4)
 
                 # Iteraciones
