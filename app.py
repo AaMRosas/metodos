@@ -759,7 +759,6 @@ if num_method=="Método de Simpson 3/8":
 
 if num_method == "Punto Fijo":
 
-    # Funciones de iteración
     def g1(x, y):
         return (x**2 + y**2 + 8) / 10
 
@@ -771,7 +770,7 @@ if num_method == "Punto Fijo":
         error = 100
         niter = 0
         results = []
-        results.append((niter, x0, y0, error))
+        results.append((niter, x0, y0, round(error, 4)))
 
         while error > tol and niter < nmaxiter:
             x1 = g1(y0, x0)
@@ -781,6 +780,8 @@ if num_method == "Punto Fijo":
             results.append((niter, x1, y1, error))
             x0 = x1
             y0 = y1
+
+        print("Resultados del Método de Jacobi:", results)  # Agregar print para mostrar resultados
         return results
 
     # Método de Gauss-Seidel
@@ -798,6 +799,8 @@ if num_method == "Punto Fijo":
             results.append((niter, x1, y1, error))
             x0 = x1
             y0 = y1
+
+        print("Resultados del Método de Gauss-Seidel:", results)  # Agregar print para mostrar resultados
         return results
 
     # Aplicación Streamlit
@@ -831,5 +834,6 @@ if num_method == "Punto Fijo":
         gauss_seidel_results = gauss_seidel_method(x0, y0, tol, nmaxiter)
         gauss_seidel_df = pd.DataFrame(gauss_seidel_results, columns=["Iteración", "x", "y", "Error"])
         st.dataframe(gauss_seidel_df.style.format({"x": "{:.5f}", "y": "{:.5f}", "Error": "{:.5f}"}))
+
 
             
