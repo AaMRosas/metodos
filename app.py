@@ -275,6 +275,17 @@ if num_method == "Diferencias Divididas":
     st.latex("f[x_0, x_1, x_2] = \\frac{f[x_1, x_2] - f[x_0, x_1]}{x_2 - x_0}")
 
 
+    def ddn(x, y):
+        n = len(x)
+        dd = np.zeros((n, n))
+        dd[:,0] = y
+        for j in range(1, n):
+            for i in range(n-j):
+                dd[i,j] = (dd[i+1,j-1] - dd[i,j-1]) / (x[i+j] - x[i])
+        return pd.DataFrame(dd)
+
+    x = symbols('x')
+
     with st.form(key="divided_diff_form"):
         num_puntos = st.number_input("Ingrese el número de puntos", min_value=2, step=1)
         
@@ -305,50 +316,33 @@ if num_method == "Diferencias Divididas":
                 st.dataframe(dd_matrix)
                 
                 # Construcción del polinomio de diferencias divididas
-                a = []
-                for g in range(len(m) + 1):
-                    aux = []
-                    for e in range(len(m)):
-                        aux.append(0)
-                    a.append(aux)
-            
-                for s in range(len(m)):
-                    a[0][s] = m[s]
-                    a[1][s] = z[s]
-
-                b = 1
-                c = 1
-                d = 1
-                w = 0  # Inicializa la variable w
-                for i in range(len(a[0])):
-                    for j in range(len(a[0]) - b):
-                        a[c + 1][j] = (a[c][j + 1] - a[c][j]) / (a[0][j + d] - a[0][j])
-                    b += 1
-                    c += 1
-                    d += 1
-                print("\n")
-                matrix = np.array(a)
-                matrix_t = np.transpose(matrix)
-                matrix_r=np.round(matrix_t, decimals=4)
-                matrix_df = pd.DataFrame(matrix_r)
-                print("Tabla De Diferencias:")
-                print(matrix_df)
+                a = np.zeros((len(m), len(m)))
+                a[:,0] = z
+                
+                for j in range(1, len(m)):
+                    for i in range(len(m) - j):
+                        a[i, j] = (a[i+1, j-1] - a[i, j-1]) / (m[i+j] - m[i])
+                
+                st.write("Tabla de Diferencias:")
+                st.dataframe(pd.DataFrame(a))
+                
                 # Se obtiene todo el polinomio
                 p = 0  # Define polinomio inicialmente
-                for t in range(len(a[0])):
-                   terminos = 1
-                   for r in range(w):
-                       terminos *= (x - a[0][r])
-                   w += 1  # Actualiza w
-                   p += a[t + 1][0] * terminos
+                terminos = 1
+                for i in range(len(m)):
+                    terminos = 1
+                    for j in range(i):
+                        terminos *= (x - m[j])
+                    p += a[0][i] * terminos
                 pol = simplify(p)                
-                    # Obtener los coeficientes del polinomio
+                
+                # Obtener los coeficientes del polinomio
                 coefficients = pol.as_poly().all_coeffs()
-                   # Convertir los coeficientes a fracciones
+                # Convertir los coeficientes a fracciones
                 coefficients_as_fractions = [Rational(coef).limit_denominator() for coef in coefficients]
-                   # Reconstruir el polinomio a partir de los coeficientes fraccionarios
-                polynomial_terms = [f"{coef}*x^{i}" for i, coef in enumerate(coefficients_as_fractions[::-1])]
-                   # Imprimir el polinomio con los términos separados
+                # Reconstruir el polinomio a partir de los coeficientes fraccionarios
+                polynomial_terms = [f"{coef}*x**{i}" for i, coef in enumerate(coefficients_as_fractions[::-1])]
+                # Imprimir el polinomio con los términos separados
                 polynomial_expression = " + ".join(polynomial_terms)   
                 sexo = simplify(polynomial_expression)
                 st.markdown(f"**Polinomio de Diferencias Divididas:** {pol}")
@@ -367,10 +361,6 @@ if num_method == "Diferencias Divididas":
                 
                 # Renderizamos en LaTex con Streamlit
                 st.latex(latex_expression)
-
-                
-                                
-                
 
         except Exception as e:
             st.error(f"Ocurrió un error al procesar los datos: {e}")
