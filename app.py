@@ -572,7 +572,32 @@ if num_method=="Método del Trapecio":
 
             # Mostrar iteraciones en una tabla
             iteraciones_df = pd.DataFrame(iteraciones, columns=["Iteración", "$x_i$", "$x_{i+1}$", "$f(x_i)$", "$f(x_{i+1})$", "Área"])
-            st.table(iteraciones_df)
+
+            # Función para convertir DataFrame a formato LaTeX
+            def dataframe_to_latex(df):
+                latex_table = df.to_latex(index=False, escape=False)
+                return latex_table
+
+            latex_table = dataframe_to_latex(iteraciones_df)
+
+            # Añadir delimitadores de tabla LaTeX y ajustes
+            latex_table = latex_table.replace("\\toprule", "\\hline").replace("\\midrule", "\\hline").replace("\\bottomrule", "\\hline")
+
+            # Reemplazar los saltos de línea para que funcionen en LaTeX en Streamlit
+            latex_table = latex_table.replace("\n", " ")
+
+            # Añadir formato tabular y delimitadores de tabla en LaTeX
+            latex_table = r"""
+            \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            """ + latex_table.split("\\hline", 1)[1] + r"""
+            \hline
+            \end{tabular}
+            """
+
+            st.write("### Tabla de Iteraciones")
+            st.latex(latex_table)
+
 
             # Gráfica de la función f(x)
             x = np.linspace(A, B, 100)
