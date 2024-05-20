@@ -172,11 +172,11 @@ if num_method == "Newton-Raphson":
     st.markdown("<h1 style='text-align: center;'>Método de Newton-Raphson para Sistemas No Lineales</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para las funciones y valores iniciales
-    f1 = st.text_input("Ingrese la 1ra ecuacion despejada f1(x,y):")
-    f2 = st.text_input("Ingrese la 2da ecuacion despejada f2(x,y):")
+    f1 = st.text_input("Ingrese la 1ra ecuacion despejada $f_1(x,y)$:")
+    f2 = st.text_input("Ingrese la 2da ecuacion despejada $f_2(x,y)$:")
 
-    x0 = st.number_input("Ingrese el valor inicial para x0:", format="%.4f")
-    y0 = st.number_input("Ingrese el valor inicial para y0:", format="%.4f")
+    x0 = st.number_input("Ingrese el valor inicial para $x_0$:", format="%.4f")
+    y0 = st.number_input("Ingrese el valor inicial para $y_0$:", format="%.4f")
 
     tolera = st.number_input("Ingrese la tolerancia:", value=0.0001, format="%.4f")
 
@@ -237,7 +237,7 @@ if num_method == "Newton-Raphson":
                 st.write("Jacobiano con puntos iniciales:")
                 st.write(J)
                 st.write(f"Determinante: {determinante}")
-                st.write(f"Puntos xi, yi: {xi}, {yi}")
+                st.write(f"Puntos $x_i$, $y_i$: {xi}, {yi}")
                 st.write(f"Error: {tramo}")
 
             st.write("### Resultado final")
@@ -371,10 +371,10 @@ if num_method == "Lagrange":
     st.latex("l_k(x) = \\prod_{j=0, \\; j \\neq k}^{n} \\frac{x - x_j}{x_k - x_j}, \\; \\text{para } k = 0, \\ldots, n.")
 
     # Entrada de datos para los valores de 'x_i' y 'f_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista '  x_i' separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista   $x_i$ separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
-    entrada_y = st.text_input("Ingrese los elementos de la lista 'f_i' separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista $f_i$ separados por comas(,):")
     fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     # Verificar que las listas tengan la misma longitud y al menos un elemento
@@ -430,7 +430,7 @@ if num_method == "Lagrange":
         st.image(buf, use_column_width=True)  # Mostrar la imagen en Streamlit
 
     else:
-        st.warning("Por favor, ingrese listas válidas para 'x_i' y 'f_i', asegurándose de que tengan la misma longitud.")
+        st.warning("Por favor, ingrese listas válidas para $x_i$ y $f_i$, asegurándose de que tengan la misma longitud.")
 
 
 
@@ -439,11 +439,11 @@ if num_method == "Mínimos Cuadrados":
     st.markdown("<h1 style='text-align: center;'>Minimos Cuadrados(Regresión Lineal)</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para los valores de 'x_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista $x_i$ separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
     # Entrada de datos para los valores de 'y_i'
-    entrada_y = st.text_input("Ingrese los elementos de la lista 'y_i' separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista $y_i$ separados por comas(,):")
     yi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     if len(xi) == len(yi) and len(xi) > 0:
@@ -513,7 +513,7 @@ if num_method == "Mínimos Cuadrados":
         st.image(buf, use_column_width=True)
 
     else:
-        st.warning("Ingrese valores válidos para 'x_i' y 'y_i', y asegúrese de que ambas listas tengan la misma longitud.")
+        st.warning("Ingrese valores válidos para $x_i$ y $y_i$, y asegúrese de que ambas listas tengan la misma longitud.")
 
 
 
@@ -553,11 +553,11 @@ if num_method=="Método del Trapecio":
     st.markdown("<h1 style='text-align: center;'>Método del Trapecio</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para los valores de 'x_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista $x_i$ separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
     # Entrada de datos para los valores de 'f(x_i)'
-    entrada_y = st.text_input("Ingrese los elementos de la lista 'f(x_i)' separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista $f(x_i)$ separados por comas(,):")
     fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     if len(xi) == len(fi) and len(xi) > 1:
@@ -600,7 +600,7 @@ if num_method=="Método del Trapecio":
             st.image(buf, use_column_width=True)
 
     else:
-        st.warning("Ingrese valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud y más de un punto.")
+        st.warning("Ingrese valores válidos para $x_i$ y $f(x_i)$, y asegúrese de que ambas listas tengan la misma longitud y más de un punto.")
 
 
 if num_method=="Método de Simpson 1/3":
@@ -630,11 +630,11 @@ if num_method=="Método de Simpson 1/3":
     st.markdown("<h1 style='text-align: center;'>Método de Simpson 1/3</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para los valores de 'x_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista $x_i$ separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
     # Entrada de datos para los valores de 'f(x_i)'
-    entrada_y = st.text_input("Ingrese los elementos de la lista 'f(x_i)' separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista $f(x_i)$ separados por comas(,):")
     fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     if len(xi) == len(fi) and len(xi) > 2:
@@ -668,7 +668,7 @@ if num_method=="Método de Simpson 1/3":
             st.pyplot(plt)
 
     else:
-        st.warning("Ingrese al menos 3 valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud.")
+        st.warning("Ingrese al menos 3 valores válidos para $x_i$ y $f(x_i)$, y asegúrese de que ambas listas tengan la misma longitud.")
 
 if num_method=="Método de Simpson 3/8":
     def integrasimpson38_fi(xi, fi, tolera=0.001):
@@ -699,11 +699,11 @@ if num_method=="Método de Simpson 3/8":
     st.markdown("<h1 style='text-align: center;'>Método de Simpson 3/8</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para los valores de 'x_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista $x_i$ separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
     # Entrada de datos para los valores de 'f(x_i)'
-    entrada_y = st.text_input("Ingrese los elementos de la lista 'f(x_i)' separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista $f(x_i)$ separados por comas(,):")
     fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     if len(xi) == len(fi) and len(xi) > 3:
@@ -737,7 +737,7 @@ if num_method=="Método de Simpson 3/8":
             st.pyplot(plt)
 
     else:
-        st.warning("Ingrese al menos 4 valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud.")
+        st.warning("Ingrese al menos 4 valores válidos para $x_i$ y $f(x_i)$, y asegúrese de que ambas listas tengan la misma longitud.")
 
 
 if num_method == "Punto Fijo":
@@ -802,8 +802,8 @@ if num_method == "Punto Fijo":
         
     st.info("Se partirá de los valores que den para $(x,y)$.")
 
-    x0 = st.number_input("Ingrese el valor inicial para x:", value=0.0, format="%.4f")
-    y0 = st.number_input("Ingrese el valor inicial para y:", value=0.0, format="%.4f")
+    x0 = st.number_input("Ingrese el valor inicial para $x$:", value=0.0, format="%.4f")
+    y0 = st.number_input("Ingrese el valor inicial para $y$:", value=0.0, format="%.4f")
     tol = st.number_input("Ingrese la tolerancia:", value=0.00001, format="%.4f")
     nmaxiter = st.number_input("Ingrese el número máximo de iteraciones:", value=100, step=1)
 
