@@ -777,11 +777,11 @@ if num_method == "Punto Fijo":
             y1 = g2(x0, y0)
             niter += 1
             error = max(abs(x1 - x0), abs(y1 - y0))
-            results.append((niter, x1, y1, error))
+            results.append((round(niter,4), round(x1,4), round(y1,4), round(error,4)))
             x0 = x1
             y0 = y1
 
-        print("Resultados del Método de Jacobi:", results)  # Agregar print para mostrar resultados
+        print(f"Solución encontrada por el Método de Jacobi: x = {x0}, y = {y0}, error = {error:.4f}")
         return results
 
     # Método de Gauss-Seidel
@@ -789,18 +789,18 @@ if num_method == "Punto Fijo":
         error = 100
         niter = 0
         results = []
-        results.append((niter, x0, y0, error))
+        results.append((round(niter,4), round(x0,4), round(y0,4), round(error,4)))
 
         while error > tol and niter < nmaxiter:
             x1 = g1(x0, y0)
             y1 = g2(x1, y0)
             niter += 1
             error = max(abs(x1 - x0), abs(y1 - y0))
-            results.append((niter, x1, y1, error))
+            results.append((round(niter,4), round(x1,4), round(y1,4), round(error,4)))
             x0 = x1
             y0 = y1
 
-        print("Resultados del Método de Gauss-Seidel:", results)  # Agregar print para mostrar resultados
+        print(f"Solución encontrada por el Método de Gauss-Seidel: x = {x0}, y = {y0}, error = {error:.4f}")
         return results
 
     # Aplicación Streamlit
@@ -819,21 +819,21 @@ if num_method == "Punto Fijo":
         
     st.info("Se partirá de los valores que den para $(x,y)$.")
 
-    x0 = st.number_input("Ingrese el valor inicial para x:", value=0.0, format="%.5f")
-    y0 = st.number_input("Ingrese el valor inicial para y:", value=0.0, format="%.5f")
-    tol = st.number_input("Ingrese la tolerancia:", value=0.00001, format="%.5f")
+    x0 = st.number_input("Ingrese el valor inicial para x:", value=0.0, format="%.4f")
+    y0 = st.number_input("Ingrese el valor inicial para y:", value=0.0, format="%.4f")
+    tol = st.number_input("Ingrese la tolerancia:", value=0.00001, format="%.4f")
     nmaxiter = st.number_input("Ingrese el número máximo de iteraciones:", value=100, step=1)
 
     if st.button("Calcular"):
         st.subheader("Resultados del Método de Jacobi")
         jacobi_results = jacobi_method(x0, y0, tol, nmaxiter)
         jacobi_df = pd.DataFrame(jacobi_results, columns=["Iteración", "x", "y", "Error"])
-        st.dataframe(jacobi_df.style.format({"x": "{:.5f}", "y": "{:.5f}", "Error": "{:.5f}"}))
+        st.dataframe(jacobi_df.style.format({"x": "{:.4f}", "y": "{:.4f}", "Error": "{:.4f}"}))
 
         st.subheader("Resultados del Método de Gauss-Seidel")
         gauss_seidel_results = gauss_seidel_method(x0, y0, tol, nmaxiter)
         gauss_seidel_df = pd.DataFrame(gauss_seidel_results, columns=["Iteración", "x", "y", "Error"])
-        st.dataframe(gauss_seidel_df.style.format({"x": "{:.5f}", "y": "{:.5f}", "Error": "{:.5f}"}))
+        st.dataframe(gauss_seidel_df.style.format({"x": "{:.4f}", "y": "{:.4f}", "Error": "{:.4f}"}))
 
 
             
