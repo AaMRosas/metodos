@@ -550,14 +550,14 @@ if num_method=="Método del Trapecio":
                 iteraciones.append([i+1, xi[i], xi[i+1], fi[i], fi[i+1], area])
 
             resultado = h * suma
-            return round(resultado, 3), trapezoids, iteraciones
+            return round(resultado, 4), trapezoids, iteraciones
         else:
             st.error("Valores no equidistantes")
             return None, None, None
 
 # Función para verificar equidistancia
     def equid(xi):
-        tol = 1e-10  # Tolerancia para verificar equidistancia
+        tol = 0.001  # Tolerancia para verificar equidistancia
         diff = xi[1] - xi[0]  # Diferencia entre el segundo y primer elemento
 
         for i in range(1, len(xi) - 1):
