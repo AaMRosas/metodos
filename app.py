@@ -229,7 +229,7 @@ if num_method == "Newton-Raphson":
                 yi = round(yi1, 4)  # Redondear a 4 decimales
 
                 itera += 1
-                resultados.append((itera, J, determinante, xi, yi, tramo))
+                resultados.append((itera, J, determinante, xi, yi, round(tramo,4)))
 
                 st.write(f"**Iteración {itera}**")
                 st.write("Jacobiano con puntos iniciales:")
