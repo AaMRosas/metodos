@@ -371,10 +371,10 @@ if num_method == "Lagrange":
     st.latex("l_k(x) = \\prod_{j=0, \\; j \\neq k}^{n} \\frac{x - x_j}{x_k - x_j}, \\; \\text{para } k = 0, \\ldots, n.")
 
     # Entrada de datos para los valores de 'x_i' y 'f_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista   $x_i$ separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista '  x_i' separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
-    entrada_y = st.text_input("Ingrese los elementos de la lista $f_i$ separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista 'f_i' separados por comas(,):")
     fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     # Verificar que las listas tengan la misma longitud y al menos un elemento
@@ -394,7 +394,7 @@ if num_method == "Lagrange":
                     numerador *= x - xi[j]
                     denominador *= xi[i] - xi[j]
             terminoLi = numerador / denominador
-            polinomio += round(terminoLi,4) * fi[i]
+            polinomio += terminoLi * fi[i]
             divisorL[i] = denominador
 
         # Simplificar el polinomio
@@ -430,7 +430,7 @@ if num_method == "Lagrange":
         st.image(buf, use_column_width=True)  # Mostrar la imagen en Streamlit
 
     else:
-        st.warning("Por favor, ingrese listas válidas para $x_i$ y $f_i$, asegurándose de que tengan la misma longitud.")
+        st.warning("Por favor, ingrese listas válidas para 'x_i' y 'f_i', asegurándose de que tengan la misma longitud.")
 
 
 
