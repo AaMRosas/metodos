@@ -617,7 +617,9 @@ if num_method=="Método del Trapecio":
 
     # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Método del Trapecio</h1>", unsafe_allow_html=True)
-
+    st.markdown("""
+El método del trapecio es una técnica de integración numérica que se utiliza para aproximar el valor de una integral definida. La idea es dividir el área bajo la curva en segmentos trapezoidales (en lugar de rectángulos, como en el método de Riemann) y sumar sus áreas. Es sencillo de aplicar y proporciona una buena aproximación para funciones que no cambian rápidamente. Sin embargo, puede ser menos preciso para funciones con alta curvatura.
+""")
     # Entrada de datos para los valores de 'x_i'
     entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
@@ -694,7 +696,9 @@ if num_method=="Método de Simpson 1/3":
 
 # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Método de Simpson 1/3</h1>", unsafe_allow_html=True)
-
+    st.markdown("""
+El método de Simpson 1/3 es otra técnica de integración numérica que ofrece una aproximación más precisa que el método del trapecio. Divide el intervalo de integración en un número par de subintervalos y utiliza polinomios cuadráticos para aproximar la función en cada par de subintervalos. Este método es especialmente útil para funciones suaves y continuas, proporcionando una buena precisión con un esfuerzo computacional moderado.
+""")
     # Entrada de datos para los valores de 'x_i'
     entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
@@ -763,7 +767,9 @@ if num_method=="Método de Simpson 3/8":
 
 # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Método de Simpson 3/8</h1>", unsafe_allow_html=True)
-
+    st.markdown("""
+El método de Simpson 3/8 es una variación del método de Simpson que utiliza polinomios cúbicos para aproximar la integral. Divide el intervalo en múltiplos de tres subintervalos y calcula la integral usando polinomios de grado tres en cada grupo de tres subintervalos. Este método puede ser más preciso que el de Simpson 1/3 para ciertas funciones, especialmente aquellas con más variabilidad, pero también requiere un número mayor de puntos de evaluación.
+""")
     # Entrada de datos para los valores de 'x_i'
     entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
