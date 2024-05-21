@@ -553,11 +553,11 @@ if num_method=="Método del Trapecio":
     st.markdown("<h1 style='text-align: center;'>Método del Trapecio</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para los valores de 'x_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista $x_i$ separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
     # Entrada de datos para los valores de 'f(x_i)'
-    entrada_y = st.text_input("Ingrese los elementos de la lista 'f(x_i)' separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista $f(x_i)$ separados por comas(,):")
     fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     if len(xi) == len(fi) and len(xi) > 1:
