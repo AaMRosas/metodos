@@ -170,13 +170,66 @@ if num_method == "Newton-Raphson":
 
     # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Método de Newton-Raphson para Sistemas No Lineales</h1>", unsafe_allow_html=True)
+    with st.container():
+        st.latex(r"""
+    f_1(x_0, y_0) + \frac{\partial f_1(x_0, y_0)}{\partial x} \Delta x + \frac{\partial f_1(x_0, y_0)}{\partial y} \Delta y \approx 0, \\
+    f_2(x_0, y_0) + \frac{\partial f_2(x_0, y_0)}{\partial x} \Delta x + \frac{\partial f_2(x_0, y_0)}{\partial y} \Delta y \approx 0.
+    """)
 
+    st.info("""
+    Si introducimos la notación $\mathbf{\tilde{x}} = (x, y)$, $\mathbf{F} = (f_1, f_2)$ y
+    $J =
+    \begin{bmatrix}
+    \frac{\partial f_1}{\partial x} & \frac{\partial f_1}{\partial y} \\
+    \frac{\partial f_2}{\partial x} & \frac{\partial f_2}{\partial y}
+    \end{bmatrix}$
+    queda:
+    """)
+
+    with st.container():
+        st.latex(r"""
+        \mathbf{F} (\mathbf{\tilde{x}_0}) + J (\mathbf{\tilde{x}_0}) (\mathbf{\tilde{x}} - \mathbf{\tilde{x}_0}) \approx 0
+        """)
+
+    st.info("""
+    Entonces:
+    """)
+
+    with st.container():
+        st.latex(r"""
+        \mathbf{\tilde{x}} = \mathbf{\tilde{x}_0} - J^{-1} (\mathbf{\tilde{x}_0}) \mathbf{F} (\mathbf{\tilde{x}_0})
+        """)
+
+    st.info("""
+    Y el método de Newton consiste en calcular la sucesión:
+    """)
+
+    with st.container():
+        st.latex(r"""
+        \mathbf{\tilde{x}_{n+1}} = \mathbf{\tilde{x}_n} - J^{-1} (\mathbf{\tilde{x}_n}) \mathbf{F} (\mathbf{\tilde{x}_n})
+        """)
+
+    st.info("""
+    A la hora de implementar el método se hace en dos pasos:
+    """)
+
+    st.markdown("**1.** Se resuelve el sistema:")
+    with st.container():
+        st.latex(r"""
+        J (\mathbf{\tilde{x}_n}) \Delta \mathbf{\tilde{x}_{n+1}} = -\mathbf{F} (\mathbf{\tilde{x}_n})
+        """)
+
+    st.markdown("**2.** Se calcula:")
+    with st.container():
+        st.latex(r"""
+        \mathbf{\tilde{x}_{n+1}} = \mathbf{\tilde{x}_n} + \Delta \mathbf{\tilde{x}_{n+1}}
+        """)
     # Entrada de datos para las funciones y valores iniciales
-    f1 = st.text_input("Ingrese la 1ra ecuacion despejada $f_1(x,y)$:")
-    f2 = st.text_input("Ingrese la 2da ecuacion despejada $f_2(x,y)$:")
+    f1 = st.text_input("Ingrese la primera función f1(x, y):")
+    f2 = st.text_input("Ingrese la segunda función f2(x, y):")
 
-    x0 = st.number_input("Ingrese el valor inicial para $x_0$:", format="%.4f")
-    y0 = st.number_input("Ingrese el valor inicial para $y_0$:", format="%.4f")
+    x0 = st.number_input("Ingrese el valor inicial para x0:", format="%.4f")
+    y0 = st.number_input("Ingrese el valor inicial para y0:", format="%.4f")
 
     tolera = st.number_input("Ingrese la tolerancia:", value=0.0001, format="%.4f")
 
@@ -210,7 +263,6 @@ if num_method == "Newton-Raphson":
             st.write("### Iteraciones")
             while tramo > tolera:
                 J = Jxy.subs([(x, xi), (y, yi)])
-                
 
                 # Determinante de J
                 Jn = np.array(J, dtype=float)
@@ -226,22 +278,21 @@ if num_method == "Newton-Raphson":
                 yi1 = yi - numerador2 / determinante
 
                 tramo = np.max(np.abs([xi1 - xi, yi1 - yi]))
-                tramo=round(tramo,4)
                 xi = round(xi1, 4)  # Redondear a 4 decimales
                 yi = round(yi1, 4)  # Redondear a 4 decimales
 
                 itera += 1
-                resultados.append((itera, J, determinante, xi, yi, round(tramo,4)))
+                resultados.append((itera, J, determinante, xi, yi, tramo))
 
                 st.write(f"**Iteración {itera}**")
                 st.write("Jacobiano con puntos iniciales:")
                 st.write(J)
                 st.write(f"Determinante: {determinante}")
-                st.write(f"Puntos $x_i$, $y_i$: {xi}, {yi}")
+                st.write(f"Puntos xi, yi: {xi}, {yi}")
                 st.write(f"Error: {tramo}")
 
             st.write("### Resultado final")
-            st.write(f"$x$: {xi}, $y$: {yi}")
+            st.write(f"x: {xi}, y: {yi}")
 
             # Mostrar resultados en una tabla
             st.write("### Detalle de las iteraciones")
@@ -249,8 +300,8 @@ if num_method == "Newton-Raphson":
                 "Iteración": [res[0] for res in resultados],
                 "Jacobian": [str(res[1]) for res in resultados],
                 "Determinante": [res[2] for res in resultados],
-                "$x_i$": [res[3] for res in resultados],
-                "$y_i$": [res[4] for res in resultados],
+                "xi": [res[3] for res in resultados],
+                "yi": [res[4] for res in resultados],
                 "Error": [res[5] for res in resultados],
             }
             st.table(iteracion_data)
@@ -274,17 +325,6 @@ if num_method == "Diferencias Divididas":
     
     st.latex("f[x_0, x_1, x_2] = \\frac{f[x_1, x_2] - f[x_0, x_1]}{x_2 - x_0}")
 
-
-    def ddn(x, y):
-        n = len(x)
-        dd = np.zeros((n, n))
-        dd[:,0] = y
-        for j in range(1, n):
-            for i in range(n-j):
-                dd[i,j] = (dd[i+1,j-1] - dd[i,j-1]) / (x[i+j] - x[i])
-        return pd.DataFrame(dd)
-
-    x = symbols('x')
 
     with st.form(key="divided_diff_form"):
         num_puntos = st.number_input("Ingrese el número de puntos", min_value=2, step=1)
@@ -316,44 +356,72 @@ if num_method == "Diferencias Divididas":
                 st.dataframe(dd_matrix)
                 
                 # Construcción del polinomio de diferencias divididas
-                a = np.zeros((len(m), len(m)))
-                a[:,0] = z
-                
-                for j in range(1, len(m)):
-                    for i in range(len(m) - j):
-                        a[i, j] = (a[i+1, j-1] - a[i, j-1]) / (m[i+j] - m[i])
-                
-                st.write("Tabla de Diferencias:")
-                st.dataframe(pd.DataFrame(a))
-                
+                a = []
+                for g in range(len(m) + 1):
+                    aux = []
+                    for e in range(len(m)):
+                        aux.append(0)
+                    a.append(aux)
+            
+                for s in range(len(m)):
+                    a[0][s] = m[s]
+                    a[1][s] = z[s]
+
+                b = 1
+                c = 1
+                d = 1
+                w = 0  # Inicializa la variable w
+                for i in range(len(a[0])):
+                    for j in range(len(a[0]) - b):
+                        a[c + 1][j] = (a[c][j + 1] - a[c][j]) / (a[0][j + d] - a[0][j])
+                    b += 1
+                    c += 1
+                    d += 1
+                print("\n")
+                matrix = np.array(a)
+                matrix_t = np.transpose(matrix)
+                matrix_r=np.round(matrix_t, decimals=4)
+                matrix_df = pd.DataFrame(matrix_r)
+                print("Tabla De Diferencias:")
+                print(matrix_df)
                 # Se obtiene todo el polinomio
                 p = 0  # Define polinomio inicialmente
-                terminos = 1
-                for i in range(len(m)):
-                    terminos = 1
-                    for j in range(i):
-                        terminos *= (x - m[j])
-                    p += a[0][i] * terminos
+                for t in range(len(a[0])):
+                   terminos = 1
+                   for r in range(w):
+                       terminos *= (x - a[0][r])
+                   w += 1  # Actualiza w
+                   p += a[t + 1][0] * terminos
                 pol = simplify(p)                
-                
-                # Redondear los coeficientes del polinomio a 4 decimales
-                coefficients = [round(float(coef), 4) for coef in pol.as_poly().all_coeffs()]
-                # Reconstruir el polinomio con los coeficientes redondeados
-                polynomial_terms = [f"{coef}*x**{i}" if i != 0 else f"{coef}" for i, coef in enumerate(coefficients[::-1])]
+                    # Obtener los coeficientes del polinomio
+                coefficients = pol.as_poly().all_coeffs()
+                   # Convertir los coeficientes a fracciones
+                coefficients_as_fractions = [Rational(coef).limit_denominator() for coef in coefficients]
+                   # Reconstruir el polinomio a partir de los coeficientes fraccionarios
+                polynomial_terms = [f"{coef}*x^{i}" for i, coef in enumerate(coefficients_as_fractions[::-1])]
+                   # Imprimir el polinomio con los términos separados
                 polynomial_expression = " + ".join(polynomial_terms)   
-                pol_redondeado = simplify(polynomial_expression)
+                sexo = simplify(polynomial_expression)
+                st.markdown(f"**Polinomio de Diferencias Divididas:** {pol}")
+                st.write(f"{sexo}") 
+                sexo = str(sexo)
+                # Tu ecuación dinámica (como cadena de texto)
+                # Convertimos "**" a "^" para potencias
+                latex_expression = sexo.replace("**", "^")
                 
-                st.markdown(f"**Polinomio de Diferencias Divididas:** {pol_redondeado}") 
-                
-                # Convertir la expresión del polinomio a LaTeX
-                latex_expression = str(pol_redondeado).replace("**", "^")
-                # Eliminar "*" en las multiplicaciones para LaTeX
+                # Eliminamos el símbolo "*" ya que en LaTex, la multiplicación es implícita
                 latex_expression = latex_expression.replace("*", "")
-                # Corregir fracciones en LaTeX
-                latex_expression = re.sub(r"(\d+)/(\d+)", r"\\frac{\1}{\2}", latex_expression)
-                latex_expression = re.sub(r"\b(\w+)\^(\d+/\d+)\b", lambda m: f"{m.group(1)}^{{{m.group(2).replace('/', '')}}}", latex_expression)
                 
+                # Usamos una expresión regular para transformar divisiones en formato LaTex
+                # Esto convierte x/y a \frac{x}{y}
+                latex_expression = re.sub(r"(\d+|\w)/(\d+)", r"\\frac{\1}{\2}", latex_expression)
+                
+                # Renderizamos en LaTex con Streamlit
                 st.latex(latex_expression)
+
+                
+                                
+                
 
         except Exception as e:
             st.error(f"Ocurrió un error al procesar los datos: {e}")
@@ -371,10 +439,10 @@ if num_method == "Lagrange":
     st.latex("l_k(x) = \\prod_{j=0, \\; j \\neq k}^{n} \\frac{x - x_j}{x_k - x_j}, \\; \\text{para } k = 0, \\ldots, n.")
 
     # Entrada de datos para los valores de 'x_i' y 'f_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista $x_i$ separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista '  x_i' separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
-    entrada_y = st.text_input("Ingrese los elementos de la lista $f_i$ separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista 'f_i' separados por comas(,):")
     fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     # Verificar que las listas tengan la misma longitud y al menos un elemento
@@ -394,7 +462,7 @@ if num_method == "Lagrange":
                     numerador *= x - xi[j]
                     denominador *= xi[i] - xi[j]
             terminoLi = numerador / denominador
-            polinomio +=terminoLi * fi[i]
+            polinomio += terminoLi * fi[i]
             divisorL[i] = denominador
 
         # Simplificar el polinomio
@@ -430,7 +498,7 @@ if num_method == "Lagrange":
         st.image(buf, use_column_width=True)  # Mostrar la imagen en Streamlit
 
     else:
-        st.warning("Por favor, ingrese listas válidas para $x_i$ y $f_i$, asegurándose de que tengan la misma longitud.")
+        st.warning("Por favor, ingrese listas válidas para 'x_i' y 'f_i', asegurándose de que tengan la misma longitud.")
 
 
 
@@ -439,11 +507,11 @@ if num_method == "Mínimos Cuadrados":
     st.markdown("<h1 style='text-align: center;'>Minimos Cuadrados(Regresión Lineal)</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para los valores de 'x_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista $x_i$ separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
     # Entrada de datos para los valores de 'y_i'
-    entrada_y = st.text_input("Ingrese los elementos de la lista $y_i$ separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista 'y_i' separados por comas(,):")
     yi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     if len(xi) == len(yi) and len(xi) > 0:
@@ -489,8 +557,8 @@ if num_method == "Mínimos Cuadrados":
 
         # Mostrar resultados
         st.write("Función de regresión lineal: ", f)
-        st.write("Coeficiente de correlación $r$: ", r)
-        st.write("Coeficiente de determinación $r²$: ", r2)
+        st.write("Coeficiente de correlación (r): ", r)
+        st.write("Coeficiente de determinación (r²): ", r2)
         st.write(f"{r2_porcentaje}% de los datos están descritos en el modelo lineal")
 
         # Gráfica
@@ -513,7 +581,7 @@ if num_method == "Mínimos Cuadrados":
         st.image(buf, use_column_width=True)
 
     else:
-        st.warning("Ingrese valores válidos para $x_i$ y $y_i$, y asegúrese de que ambas listas tengan la misma longitud.")
+        st.warning("Ingrese valores válidos para 'x_i' y 'y_i', y asegúrese de que ambas listas tengan la misma longitud.")
 
 
 
@@ -540,7 +608,7 @@ if num_method=="Método del Trapecio":
 
 # Función para verificar equidistancia
     def equid(xi):
-        tol = 0.001  # Tolerancia para verificar equidistancia
+        tol = 1e-10  # Tolerancia para verificar equidistancia
         diff = xi[1] - xi[0]  # Diferencia entre el segundo y primer elemento
 
         for i in range(1, len(xi) - 1):
@@ -553,11 +621,11 @@ if num_method=="Método del Trapecio":
     st.markdown("<h1 style='text-align: center;'>Método del Trapecio</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para los valores de 'x_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista $x_i$ separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
     # Entrada de datos para los valores de 'f(x_i)'
-    entrada_y = st.text_input("Ingrese los elementos de la lista $f(x_i)$ separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista 'f(x_i)' separados por comas(,):")
     fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     if len(xi) == len(fi) and len(xi) > 1:
@@ -600,7 +668,7 @@ if num_method=="Método del Trapecio":
             st.image(buf, use_column_width=True)
 
     else:
-        st.warning("Ingrese valores válidos para $x_i$ y $f(x_i)$, y asegúrese de que ambas listas tengan la misma longitud y más de un punto.")
+        st.warning("Ingrese valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud y más de un punto.")
 
 
 if num_method=="Método de Simpson 1/3":
@@ -624,17 +692,17 @@ if num_method=="Método de Simpson 1/3":
         if i < (n - 1):  # incompleto, faltan tramos por calcular
             st.error("Faltan puntos")
             return None, None
-        return round(suma, 4), iteraciones
+        return round(suma, 3), iteraciones
 
 # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Método de Simpson 1/3</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para los valores de 'x_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista $x_i$ separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
     # Entrada de datos para los valores de 'f(x_i)'
-    entrada_y = st.text_input("Ingrese los elementos de la lista $f(x_i)$ separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista 'f(x_i)' separados por comas(,):")
     fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     if len(xi) == len(fi) and len(xi) > 2:
@@ -644,7 +712,7 @@ if num_method=="Método de Simpson 1/3":
             st.write("El resultado de la integral es:", resultado_integral)
 
             # Mostrar iteraciones en una tabla
-            iteraciones_df = pd.DataFrame(iteraciones, columns=["$x_i$", "$x_{i+1}$", "$x_{i+2}$", "$f(x_i)$", "$f(x_{i+1})$", "$f(x_{i+2})$", "Área"])
+            iteraciones_df = pd.DataFrame(iteraciones, columns=["x_i", "x_i+1", "x_i+2", "f(x_i)", "f(x_i+1)", "f(x_i+2)", "Área"])
             st.table(iteraciones_df)
 
             # Gráfica de la función f(x)
@@ -668,7 +736,7 @@ if num_method=="Método de Simpson 1/3":
             st.pyplot(plt)
 
     else:
-        st.warning("Ingrese al menos 3 valores válidos para $x_i$ y $f(x_i)$, y asegúrese de que ambas listas tengan la misma longitud.")
+        st.warning("Ingrese al menos 3 valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud.")
 
 if num_method=="Método de Simpson 3/8":
     def integrasimpson38_fi(xi, fi, tolera=0.001):
@@ -693,17 +761,17 @@ if num_method=="Método de Simpson 3/8":
         if (i+3) < n:  # incompleto, tramos por calcular
             print("\nFaltan puntos")
             return None, None
-        return round(suma, 4), iteraciones
+        return round(suma, 3), iteraciones
 
 # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Método de Simpson 3/8</h1>", unsafe_allow_html=True)
 
     # Entrada de datos para los valores de 'x_i'
-    entrada_x = st.text_input("Ingrese los elementos de la lista $x_i$ separados por comas(,):")
+    entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
 
     # Entrada de datos para los valores de 'f(x_i)'
-    entrada_y = st.text_input("Ingrese los elementos de la lista $f(x_i)$ separados por comas(,):")
+    entrada_y = st.text_input("Ingrese los elementos de la lista 'f(x_i)' separados por comas(,):")
     fi = [float(x) for x in entrada_y.split(",")] if entrada_y else []
 
     if len(xi) == len(fi) and len(xi) > 3:
@@ -713,7 +781,7 @@ if num_method=="Método de Simpson 3/8":
             st.write("El resultado de la integral es:", resultado_integral)
 
             # Mostrar iteraciones en una tabla
-            iteraciones_df = pd.DataFrame(iteraciones, columns=["$x_i$", "$x_{i+1}$", "$x_{i+2}$", "$x_{i+3}$", "$f(x_i)$", "$f(x_{i+1})$", "$f(x_{i+2})$", "$f(x_{i+3})$", "Área"])
+            iteraciones_df = pd.DataFrame(iteraciones, columns=["x_i", "x_i+1", "x_i+2", "x_i+3", "f(x_i)", "f(x_i+1)", "f(x_i+2)", "f(x_i+3)", "Área"])
             st.table(iteraciones_df)
 
             # Gráfica de la función f(x)
@@ -737,11 +805,11 @@ if num_method=="Método de Simpson 3/8":
             st.pyplot(plt)
 
     else:
-        st.warning("Ingrese al menos 4 valores válidos para $x_i$ y $f(x_i)$, y asegúrese de que ambas listas tengan la misma longitud.")
-
+        st.warning("Ingrese al menos 4 valores válidos para 'x_i' y 'f(x_i)', y asegúrese de que ambas listas tengan la misma longitud.")
 
 if num_method == "Punto Fijo":
 
+    # Funciones de iteración
     def g1(x, y):
         return (x**2 + y**2 + 8) / 10
 
@@ -753,18 +821,16 @@ if num_method == "Punto Fijo":
         error = 100
         niter = 0
         results = []
-        results.append((niter, x0, y0, round(error, 4)))
+        results.append((niter, x0, y0, error))
 
         while error > tol and niter < nmaxiter:
             x1 = g1(y0, x0)
             y1 = g2(x0, y0)
             niter += 1
             error = max(abs(x1 - x0), abs(y1 - y0))
-            results.append((round(niter,4), round(x1,4), round(y1,4), round(error,4)))
+            results.append((niter, x1, y1, error))
             x0 = x1
             y0 = y1
-
-        print(f"Solución encontrada por el Método de Jacobi: x = {x0}, y = {y0}, error = {error:.4f}")
         return results
 
     # Método de Gauss-Seidel
@@ -772,18 +838,16 @@ if num_method == "Punto Fijo":
         error = 100
         niter = 0
         results = []
-        results.append((round(niter,4), round(x0,4), round(y0,4), round(error,4)))
+        results.append((niter, x0, y0, error))
 
         while error > tol and niter < nmaxiter:
             x1 = g1(x0, y0)
             y1 = g2(x1, y0)
             niter += 1
             error = max(abs(x1 - x0), abs(y1 - y0))
-            results.append((round(niter,4), round(x1,4), round(y1,4), round(error,4)))
+            results.append((niter, x1, y1, error))
             x0 = x1
             y0 = y1
-
-        print(f"Solución encontrada por el Método de Gauss-Seidel: x = {x0}, y = {y0}, error = {error:.4f}")
         return results
 
     # Aplicación Streamlit
@@ -802,21 +866,20 @@ if num_method == "Punto Fijo":
         
     st.info("Se partirá de los valores que den para $(x,y)$.")
 
-    x0 = st.number_input("Ingrese el valor inicial para $x$:", value=0.0, format="%.4f")
-    y0 = st.number_input("Ingrese el valor inicial para $y$:", value=0.0, format="%.4f")
-    tol = st.number_input("Ingrese la tolerancia:", value=0.00001, format="%.4f")
+    x0 = st.number_input("Ingrese el valor inicial para x:", value=0.0, format="%.5f")
+    y0 = st.number_input("Ingrese el valor inicial para y:", value=0.0, format="%.5f")
+    tol = st.number_input("Ingrese la tolerancia:", value=0.00001, format="%.5f")
     nmaxiter = st.number_input("Ingrese el número máximo de iteraciones:", value=100, step=1)
 
     if st.button("Calcular"):
         st.subheader("Resultados del Método de Jacobi")
         jacobi_results = jacobi_method(x0, y0, tol, nmaxiter)
-        jacobi_df = pd.DataFrame(jacobi_results, columns=["Iteración", "$x$", "$y$", "Error"])
-        st.dataframe(jacobi_df.style.format({"x": "{:.4f}", "y": "{:.4f}", "Error": "{:.4f}"}))
+        jacobi_df = pd.DataFrame(jacobi_results, columns=["Iteración", "x", "y", "Error"])
+        st.dataframe(jacobi_df.style.format({"x": "{:.5f}", "y": "{:.5f}", "Error": "{:.5f}"}))
 
         st.subheader("Resultados del Método de Gauss-Seidel")
         gauss_seidel_results = gauss_seidel_method(x0, y0, tol, nmaxiter)
-        gauss_seidel_df = pd.DataFrame(gauss_seidel_results, columns=["Iteración", "$x$", "$y$", "Error"])
-        st.dataframe(gauss_seidel_df.style.format({"x": "{:.4f}", "y": "{:.4f}", "Error": "{:.4f}"}))
-
+        gauss_seidel_df = pd.DataFrame(gauss_seidel_results, columns=["Iteración", "x", "y", "Error"])
+        st.dataframe(gauss_seidel_df.style.format({"x": "{:.5f}", "y": "{:.5f}", "Error": "{:.5f}"}))
 
             
