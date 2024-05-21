@@ -491,7 +491,7 @@ if num_method == "Mínimos Cuadrados":
     # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Minimos Cuadrados(Regresión Lineal)</h1>", unsafe_allow_html=True)
     st.info("La regresión lineal de mínimos cuadrados es un método estadístico utilizado para modelar la relación entre una variable dependiente (respuesta) y una o más variables independientes (predictoras). El objetivo es encontrar una línea (o hiperplano en el caso de múltiples variables) que minimice la suma de los cuadrados de las diferencias entre los valores observados y los valores predichos por el modelo")
-    st.title("Fórmulas de la Regresión Lineal de Mínimos Cuadrados")
+    st.info("Fórmulas de la Regresión Lineal de Mínimos Cuadrados")
 
     st.header("Pendiente (\( m \))")
     st.latex(r"""
@@ -503,17 +503,7 @@ if num_method == "Mínimos Cuadrados":
     b = \frac{\sum y \sum (x^2) - \sum x \sum (xy)}{n \sum (x^2) - (\sum x)^2}
     """)
 
-    st.header("Fórmulas Alternativas usando las medias de \( x \) y \( y \)")
-
-    st.subheader("Pendiente (\( m \))")
-    st.latex(r"""
-    m = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2}
-    """)
-
-    st.subheader("Intersección con el eje \( y \) (\( b \))")
-    st.latex(r"""
-    b = \bar{y} - m \bar{x}
-    """)
+    
     # Entrada de datos para los valores de 'x_i'
     entrada_x = st.text_input("Ingrese los elementos de la lista 'x_i' separados por comas(,):")
     xi = [float(x) for x in entrada_x.split(",")] if entrada_x else []
