@@ -394,8 +394,7 @@ if num_method == "Lagrange":
                     numerador *= x - xi[j]
                     denominador *= xi[i] - xi[j]
             terminoLi = numerador / denominador
-            round(terminoLi,4)
-            polinomio +=terminoLi * fi[i]
+            polinomio +=round(terminoLi,4) * fi[i]
             divisorL[i] = denominador
 
         # Simplificar el polinomio
