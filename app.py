@@ -540,7 +540,7 @@ if num_method=="Método del Trapecio":
 
 # Función para verificar equidistancia
     def equid(xi):
-        tol = 1e-10  # Tolerancia para verificar equidistancia
+        tol = 0.001  # Tolerancia para verificar equidistancia
         diff = xi[1] - xi[0]  # Diferencia entre el segundo y primer elemento
 
         for i in range(1, len(xi) - 1):
