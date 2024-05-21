@@ -177,14 +177,14 @@ if num_method == "Newton-Raphson":
     """)
 
     st.info("""
-    Si introducimos la notación $\mathbf{\tilde{x}} = (x, y)$, $\mathbf{F} = (f_1, f_2)$ y
-    $J =
-    \begin{bmatrix}
-    \frac{\partial f_1}{\partial x} & \frac{\partial f_1}{\partial y} \\
-    \frac{\partial f_2}{\partial x} & \frac{\partial f_2}{\partial y}
-    \end{bmatrix}$
-    queda:
-    """)
+Si introducimos la notación $\mathbf{\tilde{x}} = (x, y)$, $\mathbf{F} = (f_1, f_2)$ y
+$J =
+\begin{bmatrix}
+\frac{\partial f_1}{\partial x} & \frac{\partial f_1}{\partial y} \\
+\frac{\partial f_2}{\partial x} & \frac{\partial f_2}{\partial y}
+\end{bmatrix}$
+queda:
+""")
 
     with st.container():
         st.latex(r"""
