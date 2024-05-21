@@ -170,22 +170,7 @@ if num_method == "Newton-Raphson":
 
     # Título de la aplicación
     st.markdown("<h1 style='text-align: center;'>Método de Newton-Raphson para Sistemas No Lineales</h1>", unsafe_allow_html=True)
-    with st.container():
-        st.latex(r"""
-    f_1(x_0, y_0) + \frac{\partial f_1(x_0, y_0)}{\partial x} \Delta x + \frac{\partial f_1(x_0, y_0)}{\partial y} \Delta y \approx 0, \\
-    f_2(x_0, y_0) + \frac{\partial f_2(x_0, y_0)}{\partial x} \Delta x + \frac{\partial f_2(x_0, y_0)}{\partial y} \Delta y \approx 0.
-    """)
-
-    st.info("""
-Si introducimos la notación $\mathbf{\tilde{x}} = (x, y)$, $\mathbf{F} = (f_1, f_2)$ y
-$J =
-\begin{bmatrix}
-\frac{\partial f_1}{\partial x} & \frac{\partial f_1}{\partial y} \\
-\frac{\partial f_2}{\partial x} & \frac{\partial f_2}{\partial y}
-\end{bmatrix}$
-queda:
-""")
-
+    
     with st.container():
         st.latex(r"""
         \mathbf{F} (\mathbf{\tilde{x}_0}) + J (\mathbf{\tilde{x}_0}) (\mathbf{\tilde{x}} - \mathbf{\tilde{x}_0}) \approx 0
